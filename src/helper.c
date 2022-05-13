@@ -36,8 +36,8 @@ Token_t get_token() {
     put_token.type = -1;
     return t;
   }
-  t = tokens[parse_index];
-  ++parse_index;
+  t = tokens[p_token];
+  ++p_token;
   return t;
 }
 
@@ -46,25 +46,25 @@ Token_t get_token() {
  * printf the parse error infomation
  * the errorinfo is set by specific parse_xxx() function
  */
-void handle_error() {
-  Log(errinfo);
+void handle_error(int errorkind) {
+  Log(errorkind);
 }
 
 /**
  * @brief 
- * compare t and expected token type 
+ * compare hold token and expected token type 
  * return 0 on successful
  * exit(-1) on failure
  * @param t 
  * @param type 
  * @return int 
  */
-int match(Token_t t, int type) {
+int match(Token_t hold, int expected) {
   // char instr[8] = {'\0'};
-  printf("token ====> %d\n", t.type);
-  switch (type) {
+  printf("token ====> %d\n", hold.type);
+  switch (expected) {
     case TK_VAR:
-      if (t.type == TK_VAR) {
+      if (hold.type == TK_VAR) {
         printf("token var recognize!\n");
         break;
       } else {
@@ -72,7 +72,7 @@ int match(Token_t t, int type) {
         return (-1);
       }
     case TK_SEMI:
-      if (t.type == TK_SEMI) {
+      if (hold.type == TK_SEMI) {
         printf("token ';' recognize!\n");
         break;
       } else {
@@ -80,7 +80,7 @@ int match(Token_t t, int type) {
         return (-1);
       }
     case TK_IDENTIFIER:
-      if (t.type == TK_IDENTIFIER) {
+      if (hold.type == TK_IDENTIFIER) {
         printf("token identifier recognize!\n");
         break;
       } else {
@@ -88,7 +88,7 @@ int match(Token_t t, int type) {
         return (-1);
       }
     case TK_COMMA:
-      if (t.type == TK_COMMA) {
+      if (hold.type == TK_COMMA) {
         printf("token ',' recognize!\n");
         break;
       } else {
@@ -96,28 +96,28 @@ int match(Token_t t, int type) {
         return (-1);
       }
     case TK_LP:
-      if (t.type == TK_LP) {
+      if (hold.type == TK_LP) {
         break;
       } else {
         printf("match error!\n");
         return (-1);
       }
     case TK_RP:
-      if (t.type == TK_RP) {
+      if (hold.type == TK_RP) {
         break;
       } else {
         printf("match error!\n");
         return (-1);
       }
     case TK_READ:
-      if (t.type == TK_READ) {
+      if (hold.type == TK_READ) {
         break;
       } else {
         printf("match error!\n");
         return (-1);
       }
     case TK_ASSIGN:
-      if (t.type == TK_ASSIGN) {
+      if (hold.type == TK_ASSIGN) {
         break;
       } else {
         printf("match error!\n");

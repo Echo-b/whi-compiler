@@ -10,6 +10,23 @@
 #define ARRLEN(arr) (int)(sizeof(arr) / sizeof(arr[0]))
 
 enum {
+  ERROR_x00,   // declaration missing ;
+  ERROR_x01,   // declaration syntax error
+  ERROR_x02,   // division by zero
+  ERROR_x03,   // expression syntax error
+  ERROR_x04,   // variable undeclaration
+  ERROR_x05,   // while statement must have od
+  ERROR_x06,   // while statement must have do
+  ERROR_x07,   // if statement must have fi
+  ERROR_x08,   // missing left parenthesis
+  ERROR_x09,   // missing right parenthesis
+  ERROR_x10,   // declaration missing ','
+  ERROR_x11,   // unknown mistake
+  ERROR_x12,   // if statement must have else
+  ERROR_x13,   // if statement must have then
+};
+
+enum {
   TK_NOTYPE = 256,
   TK_EQ,
   TK_IDENTIFIER,  // some custom variable
@@ -86,7 +103,7 @@ static int Gsyspos = 0;
 static Token_t tokens[1024] = {};
 static int nr_token = 0;
 
-static int parse_index = 0;
+static int p_token = 0;
 
 char* keyword_table[] = {"var", "skip", "read", "write", "if", "then", "else", "fi", "while", "do", "od"};
 
