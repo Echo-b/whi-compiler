@@ -7,9 +7,9 @@
 struct grammer_error{
   int errorkind;
   const char* str;
-  //void (*handler) (int errorkind);
+  // void (*handler) (int errorkind,int row, int col);
 } errors[] = {
-  {ERROR_x00, "declaration missing ;"},
+  {ERROR_x00, "missing ;"},
   {ERROR_x01, "declaration syntax error"},
   {ERROR_x02, "division by zero"},
   {ERROR_x03, "expression syntax error"},
@@ -23,14 +23,14 @@ struct grammer_error{
   {ERROR_x11, "unknown mistake"},
 };
 
-
 /**
  * @brief 
  * printf specific error infomation
  * @param erroinfo 
  */
-void Log(int errorkind) {
-  printf("%s\n", errors[errorkind].str);
+void Log(int errorkind, int row, int col) {
+  printf("%s at positon (%d,%d)\n",errors[errorkind].str,row, col);
+  //printf("%s\n", errors[errorkind].str);
 }
 
 void Assert(char* errinfo) {

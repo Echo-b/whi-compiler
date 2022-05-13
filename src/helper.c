@@ -46,8 +46,8 @@ Token_t get_token() {
  * printf the parse error infomation
  * the errorinfo is set by specific parse_xxx() function
  */
-void handle_error(int errorkind) {
-  Log(errorkind);
+void handle_error(int errorkind, int row, int col) {
+  Log(errorkind, row, col);
 }
 
 /**
@@ -63,54 +63,26 @@ int match(Token_t hold, int expected) {
   // char instr[8] = {'\0'};
   printf("token ====> %d\n", hold.type);
   switch (expected) {
-    case TK_VAR:
-      if (hold.type == TK_VAR) {
-        printf("token var recognize!\n");
-        break;
-      } else {
-        printf("match error!\n");
-        return (-1);
-      }
     case TK_SEMI:
       if (hold.type == TK_SEMI) {
         printf("token ';' recognize!\n");
         break;
       } else {
-        printf("match error!\n");
+        // printf("match error! expect ';'\n");
+        handle_error(ERROR_x00,hold.row,hold.col);
         return (-1);
       }
     case TK_IDENTIFIER:
-      if (hold.type == TK_IDENTIFIER) {
+      if (serchslot(hold.str) != -1 && hold.type == TK_IDENTIFIER) {
         printf("token identifier recognize!\n");
         break;
       } else {
-        printf("match error!\n");
+        handle_error(ERROR_x04,hold.row,hold.col);
         return (-1);
       }
     case TK_COMMA:
       if (hold.type == TK_COMMA) {
         printf("token ',' recognize!\n");
-        break;
-      } else {
-        printf("match error!\n");
-        return (-1);
-      }
-    case TK_LP:
-      if (hold.type == TK_LP) {
-        break;
-      } else {
-        printf("match error!\n");
-        return (-1);
-      }
-    case TK_RP:
-      if (hold.type == TK_RP) {
-        break;
-      } else {
-        printf("match error!\n");
-        return (-1);
-      }
-    case TK_READ:
-      if (hold.type == TK_READ) {
         break;
       } else {
         printf("match error!\n");

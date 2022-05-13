@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
   }
   tokens[nr_token++].type = TK_EOF;
   show_token();
-  //parse();
+  parse();
   show_systable();
   fclose(fp);
   //fclose(ssam_out);

@@ -14,9 +14,7 @@
  * call handle_error() function on unsuccessful 
  */
 void parse_vardeclation(){
-  Token_t hold_token = tokens[p_token];
-  match(hold_token,TK_VAR);
-  hold_token = get_token();
+  Token_t hold_token = get_token(); // skip var keyword
   match(hold_token,TK_IDENTIFIER);
   hold_token = get_token();
   if(hold_token.type == TK_COMMA){
@@ -46,7 +44,7 @@ void parse_expression(){
     hold_token = get_token();
   }
   else
-    handle_error(ERROR_x11);
+    handle_error(ERROR_x11,hold_token.row,hold_token.col);
 }
 
 
@@ -68,7 +66,7 @@ void parse_subexpression_TS(){
     if(hold_token.type == TK_PLUS || hold_token.type == TK_MINUS)
       parse_subexpression_TS();
     else
-      handle_error(ERROR_x11);
+      handle_error(ERROR_x11,hold_token.row,hold_token.col);
     break;
   case TK_MINUS:
     hold_token = get_token(); // skip - token
@@ -77,10 +75,10 @@ void parse_subexpression_TS(){
     if(hold_token.type == TK_PLUS || hold_token.type == TK_MINUS)
       parse_subexpression_TS();
     else
-      handle_error(ERROR_x11);
+      handle_error(ERROR_x11,hold_token.row,hold_token.col);
     break;
   default:
-    handle_error(ERROR_x11);
+    handle_error(ERROR_x11,hold_token.row,hold_token.col);
     break;
   }
   hold_token = get_token();
@@ -100,7 +98,7 @@ void parse_subexpression_T(){
     hold_token = get_token();
   }
   else
-    handle_error(10);
+    handle_error(ERROR_x11,hold_token.row,hold_token.col);
 }
 
 /**
@@ -121,7 +119,7 @@ void parse_subexpression_FS(){
     if(hold_token.type == TK_MUL || hold_token.type == TK_DIV)
       parse_subexpression_FS();
     else
-      handle_error(ERROR_x11);
+      handle_error(ERROR_x11,hold_token.row,hold_token.col);
     break;
   case TK_DIV:
     hold_token = get_token();  // skip / token
@@ -130,10 +128,10 @@ void parse_subexpression_FS(){
     if(hold_token.type == TK_MUL || hold_token.type == TK_DIV)
       parse_subexpression_FS();
     else
-      handle_error(ERROR_x11);
+      handle_error(ERROR_x11,hold_token.row,hold_token.col);
     break;
   default:
-    handle_error(ERROR_x11);
+    handle_error(ERROR_x11,hold_token.row,hold_token.col);
     break;
   }
   hold_token = get_token();
@@ -153,7 +151,7 @@ void parse_subexpression_F(){
     hold_token = get_token();
   }
   else
-    handle_error(ERROR_x11);
+    handle_error(ERROR_x11,hold_token.row,hold_token.col);
 }
 
 /**
@@ -170,7 +168,7 @@ void parse_subexpression_D1(){
     hold_token = get_token();
   }
   else
-    handle_error(ERROR_x11);
+    handle_error(ERROR_x11,hold_token.row,hold_token.col);
 }
 
 /**
@@ -200,7 +198,7 @@ void parse_subexpression_D(){
     parse_expression();
     break;
   default:
-    handle_error(ERROR_x11);
+    handle_error(ERROR_x11,hold_token.row,hold_token.col);
     break;
   }
   hold_token = get_token();
@@ -287,13 +285,13 @@ void parse_if_stmt(){
       if (TK_FI == hold_token.type) {
         hold_token = get_token();
       } else {
-        handle_error(ERROR_x07);  // lack fi
+        handle_error(ERROR_x07,hold_token.row,hold_token.col);  // lack fi
       }
     } else {
-      handle_error(ERROR_x12);  // lack else
+      handle_error(ERROR_x12,hold_token.row,hold_token.col);  // lack else
     }
   } else {
-    handle_error(ERROR_x13);  // lack then
+    handle_error(ERROR_x13,hold_token.row,hold_token.col);  // lack then
   }
 }
 
@@ -313,10 +311,10 @@ void parse_while_stmt(){
     if (TK_OD == hold_token.type) {
       hold_token = get_token(); // skip od keyword
     } else {
-      handle_error(ERROR_x05); // lack od
+      handle_error(ERROR_x05,hold_token.row,hold_token.col); // lack od
     }
   } else {
-    handle_error(ERROR_x06); // lack do
+    handle_error(ERROR_x06,hold_token.row,hold_token.col); // lack do
   }
 }
 
@@ -341,7 +339,7 @@ void parse_statement(){
   else if (TK_WRITE == hold_token.type)
     parse_write_stmt();
   else
-    handle_error(10);
+    handle_error(ERROR_x11,hold_token.row,hold_token.col);
 }
 
 /**
@@ -394,7 +392,7 @@ int parse(){
     printf("parse over, congratulations!!!");
     return 0;
   }else {
-    handle_error(10);
+    handle_error(ERROR_x11,tokens[p_token].row,tokens[p_token].col);
   }
 }
 
