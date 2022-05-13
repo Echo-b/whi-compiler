@@ -58,7 +58,6 @@ void parse_subexpression_TS(){
   Token_t hold_token = tokens[p_token];
   switch (hold_token.type)
   {
-  hold_token = get_token();
   case TK_PLUS:
     hold_token = get_token(); // skip + token
     parse_subexpression_T();
@@ -111,7 +110,6 @@ void parse_subexpression_FS(){
   Token_t hold_token = tokens[p_token];
   switch (hold_token.type)
   {
-  hold_token = get_token();
   case TK_MUL:
     hold_token = get_token();   //skip * token
     parse_subexpression_F();
@@ -164,6 +162,7 @@ void parse_subexpression_D1(){
   Token_t hold_token = tokens[p_token];
   if(hold_token.type == TK_EQ || hold_token.type == TK_LESS){
     hold_token = get_token(); // skip '=' or '<' token
+    // may be more consideration
     parse_subexpression_D();
     hold_token = get_token();
   }
@@ -188,6 +187,7 @@ void parse_subexpression_D(){
     match(hold_token,TK_IDENTIFIER);
     break;
   case TK_LP:
+    // match(hold_token,TK_LP);  // match (
     hold_token = get_token(); // skip (
     parse_expression();
     hold_token = tokens[p_token];
@@ -370,7 +370,8 @@ void parse_program(){
   Token_t hold_token = get_token();
   if (TK_VAR == hold_token.type) {
     parse_vardeclation();
-    hold_token = get_token();
+    hold_token = tokens[p_token];
+    // printf("*******the now token is %s********\n",hold_token.str);
     match(hold_token, TK_SEMI);
     parse_stmt_list();
   } else {

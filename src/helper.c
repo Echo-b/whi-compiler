@@ -95,6 +95,20 @@ int match(Token_t hold, int expected) {
         printf("match error!\n");
         return (-1);
       }
+    case TK_LP:
+      if (hold.type == TK_LP) {
+        break;
+      } else {
+        handle_error(ERROR_x09,hold.row,hold.col);
+        return (-1);
+      }
+    case TK_RP:
+      if (hold.type == TK_RP) {
+        break;
+      } else {
+        handle_error(ERROR_x09,hold.row,hold.col);
+        return (-1);
+      }
     default:
       printf("no recognize token type!\n");
       break;

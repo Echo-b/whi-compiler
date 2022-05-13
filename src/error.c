@@ -17,8 +17,8 @@ struct grammer_error{
   {ERROR_x05, "while statement must have od"},
   {ERROR_x06, "while statement must have do"},
   {ERROR_x07, "if statement must have fi"},
-  {ERROR_x08, "missing left parenthesis"},
-  {ERROR_x09, "missing right parenthesis"},
+  {ERROR_x08, "missing ("},
+  {ERROR_x09, "missing )"},
   {ERROR_x10, "declaration missing ','"},
   {ERROR_x11, "unknown mistake"},
 };

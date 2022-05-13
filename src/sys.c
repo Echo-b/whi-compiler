@@ -14,7 +14,7 @@ int addglob(char* identifier) {
   if ((Gsyspos + 1) < NGSYSNUM)
     Gsyt[Gsyspos++].name = identifier;
   else {
-    Log("globle symbol table size is not enough!");
+    printf("globle symbol table size is not enough!");
     return (-1);
   }
   return Gsyspos;
