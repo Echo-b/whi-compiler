@@ -90,6 +90,7 @@ int match(Token_t hold, int expected) {
       }
     case TK_ASSIGN:
       if (hold.type == TK_ASSIGN) {
+        printf("token ':=' recognize!\n");
         break;
       } else {
         printf("match error!\n");

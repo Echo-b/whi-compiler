@@ -24,6 +24,8 @@ void parse_vardeclation(){
       match(hold_token, TK_IDENTIFIER);
       hold_token = get_token();
     }
+    putback(hold_token);
+    printf("token type %d\n",hold_token.type);
   }else {
     return;
   }
@@ -44,7 +46,8 @@ void parse_expression(){
     hold_token = get_token();
   }
   else
-    handle_error(ERROR_x11,hold_token.row,hold_token.col);
+    return;
+    // handle_error(ERROR_x11,hold_token.row,hold_token.col);
 }
 
 
@@ -65,8 +68,8 @@ void parse_subexpression_TS(){
     if(hold_token.type == TK_PLUS || hold_token.type == TK_MINUS)
       parse_subexpression_TS();
     else
-      handle_error(ERROR_x11,hold_token.row,hold_token.col);
-    break;
+      // handle_error(ERROR_x11,hold_token.row,hold_token.col);
+      break;
   case TK_MINUS:
     hold_token = get_token(); // skip - token
     parse_subexpression_T();
@@ -74,8 +77,8 @@ void parse_subexpression_TS(){
     if(hold_token.type == TK_PLUS || hold_token.type == TK_MINUS)
       parse_subexpression_TS();
     else
-      handle_error(ERROR_x11,hold_token.row,hold_token.col);
-    break;
+      // handle_error(ERROR_x11,hold_token.row,hold_token.col);
+      break;
   default:
     handle_error(ERROR_x11,hold_token.row,hold_token.col);
     break;
@@ -97,7 +100,8 @@ void parse_subexpression_T(){
     hold_token = get_token();
   }
   else
-    handle_error(ERROR_x11,hold_token.row,hold_token.col);
+    return;
+    // handle_error(ERROR_x11,hold_token.row,hold_token.col);
 }
 
 /**
@@ -117,8 +121,8 @@ void parse_subexpression_FS(){
     if(hold_token.type == TK_MUL || hold_token.type == TK_DIV)
       parse_subexpression_FS();
     else
-      handle_error(ERROR_x11,hold_token.row,hold_token.col);
-    break;
+      // handle_error(ERROR_x11,hold_token.row,hold_token.col);
+      break;
   case TK_DIV:
     hold_token = get_token();  // skip / token
     parse_subexpression_F();
@@ -126,8 +130,8 @@ void parse_subexpression_FS(){
     if(hold_token.type == TK_MUL || hold_token.type == TK_DIV)
       parse_subexpression_FS();
     else
-      handle_error(ERROR_x11,hold_token.row,hold_token.col);
-    break;
+      // handle_error(ERROR_x11,hold_token.row,hold_token.col);
+     break;
   default:
     handle_error(ERROR_x11,hold_token.row,hold_token.col);
     break;
@@ -149,7 +153,8 @@ void parse_subexpression_F(){
     hold_token = get_token();
   }
   else
-    handle_error(ERROR_x11,hold_token.row,hold_token.col);
+    return;
+    // handle_error(ERROR_x11,hold_token.row,hold_token.col);
 }
 
 /**
@@ -178,6 +183,7 @@ void parse_subexpression_D1(){
  */
 void parse_subexpression_D(){
   Token_t hold_token = tokens[p_token];
+  //printf("Parse_D token is %d\n",hold_token.type);
   switch (hold_token.type)
   {
   case TK_NUM:
@@ -224,11 +230,10 @@ void parse_skip_stmt(){
  * call handle_error() function on failure 
  */
 void parse_assg_stmt(){
-  Token_t hold_token = tokens[p_token];
+  Token_t hold_token = get_token();
   match(hold_token, TK_IDENTIFIER);
   hold_token = get_token();
   match(hold_token, TK_ASSIGN);
-  hold_token = get_token();
   parse_expression();
   hold_token = get_token();
 }
@@ -370,8 +375,8 @@ void parse_program(){
   Token_t hold_token = get_token();
   if (TK_VAR == hold_token.type) {
     parse_vardeclation();
-    hold_token = tokens[p_token];
-    // printf("*******the now token is %s********\n",hold_token.str);
+    // printf("----------%d----------\n",p_token);
+    hold_token = get_token();
     match(hold_token, TK_SEMI);
     parse_stmt_list();
   } else {
