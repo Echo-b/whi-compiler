@@ -37,6 +37,7 @@ Token_t get_token() {
     return t;
   }
   t = tokens[p_token];
+  printf("the p_token is => %d ,hit the token => %d, the next token is => %d\n",p_token,tokens[p_token].type,tokens[p_token+1].type);
   ++p_token;
   return t;
 }
@@ -61,7 +62,7 @@ void handle_error(int errorkind, int row, int col) {
  */
 int match(Token_t hold, int expected) {
   // char instr[8] = {'\0'};
-  printf("token ====> %d\n", hold.type);
+  // printf("token ====> %d\n", hold.type);
   switch (expected) {
     case TK_SEMI:
       if (hold.type == TK_SEMI) {

@@ -14,14 +14,17 @@
  * call handle_error() function on unsuccessful 
  */
 void parse_vardeclation(){
+  // generate_instr_int(Gsyspos);
   Token_t hold_token = get_token(); // skip var keyword
   match(hold_token,TK_IDENTIFIER);
+  // generate_instr_var(hold_token);
   hold_token = get_token();
   if(hold_token.type == TK_COMMA){
     while(hold_token.type != TK_SEMI){
       match(hold_token, TK_COMMA);
       hold_token = get_token();
       match(hold_token, TK_IDENTIFIER);
+      // generate_instr_var(hold_token);
       hold_token = get_token();
     }
     putback(hold_token);
