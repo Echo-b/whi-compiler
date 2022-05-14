@@ -149,7 +149,7 @@ int init_token(char* e, bool* success) {
  */
 void show_token() {
   for (int i = 0; i < nr_token; i++) {
-    printf("token type=> [%d] \t token value => [%s] \t position =>(%d,%d)\n", tokens[i].type, tokens[i].str, tokens[i].row, tokens[i].col);
+    printf("token[%d] type=> [%d] \t token value => [%s] \t position =>(%d,%d)\n",i ,tokens[i].type, tokens[i].str, tokens[i].row, tokens[i].col);
   }
 }
 

@@ -99,6 +99,7 @@ int match(Token_t hold, int expected) {
       }
     case TK_LP:
       if (hold.type == TK_LP) {
+        printf("token '(' recognize!\n");
         break;
       } else {
         handle_error(ERROR_x09,hold.row,hold.col);
@@ -106,9 +107,26 @@ int match(Token_t hold, int expected) {
       }
     case TK_RP:
       if (hold.type == TK_RP) {
+        printf("token ')' recognize!\n");
         break;
       } else {
         handle_error(ERROR_x09,hold.row,hold.col);
+        return (-1);
+      }
+    case TK_READ:
+      if (hold.type == TK_READ) {
+        printf("token 'read' recognize!\n");
+        break;
+      } else {
+        handle_error(ERROR_x11,hold.row,hold.col);
+        return (-1);
+      }
+      case TK_WRITE:
+      if (hold.type == TK_WRITE) {
+        printf("token 'write' recognize!\n");
+        break;
+      } else {
+        handle_error(ERROR_x11,hold.row,hold.col);
         return (-1);
       }
     default:

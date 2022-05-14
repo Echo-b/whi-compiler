@@ -20,6 +20,7 @@ void generate_instr_lod(Token_t t) {
 在这里我们需要做的就是需要将相应的代码生成函数插入到语法分析的代码中，然后将其输入到制定的代码输出文件。
 
 一个实例如图：
+
 ![](../../asserts/codegen2.png)
 
 ```c
