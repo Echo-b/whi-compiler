@@ -5,6 +5,7 @@
 #include "defs.h"
 #include "generate_instr.c"
 #include "helper.c"
+#include "color.h"
 
 /**
  * @brief 
@@ -437,7 +438,7 @@ int parse(){
   parse_program();
   // printf("p_token ** %d\n",tokens[p_token].type);
   if(tokens[p_token].type == TK_EOF){
-    printf("parse over, congratulations!!!\n");
+    printf(GREEN"parse over, congratulations!!!\n"NONE);
     return 0;
   }else {
     handle_error(ERROR_x11,tokens[p_token].row,tokens[p_token].col);

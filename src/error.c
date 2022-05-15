@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include "defs.h"
+#include "color.h"
 
 struct grammer_error{
   int errorkind;
@@ -29,7 +30,7 @@ struct grammer_error{
  * @param erroinfo 
  */
 void Log(int errorkind, int row, int col) {
-  printf("%s at positon (%d,%d)\n",errors[errorkind].str,row, col);
+  printf(RED"[error]:%s at positon (%d,%d)\n"NONE,errors[errorkind].str,row, col);
   //printf("%s\n", errors[errorkind].str);
 }
 
