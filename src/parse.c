@@ -133,6 +133,7 @@ void parse_subexpression_FS(){
     printf("recognize '*' token\n");
     hold_token = get_token();   //skip * token
     parse_subexpression_F();
+    generate_instr_mul();
     hold_token = tokens[p_token];
     if(hold_token.type == TK_MUL || hold_token.type == TK_DIV){
       parse_subexpression_FS();
@@ -144,6 +145,7 @@ void parse_subexpression_FS(){
     printf("recognize '/' token\n");
     hold_token = get_token();  // skip / token
     parse_subexpression_F();
+    generate_instr_div();
     // printf("after the parse_F, the p_token is===%d\n",p_token);
     hold_token = tokens[p_token];
     if(hold_token.type == TK_MUL || hold_token.type == TK_DIV){
@@ -280,6 +282,7 @@ void parse_read_stmt(){
   hold_token = get_token();
   match(hold_token, TK_LP);
   hold_token = get_token();
+  generate_instr_read(hold_token);
   match(hold_token, TK_IDENTIFIER);
   hold_token = get_token();
   match(hold_token, TK_RP);
