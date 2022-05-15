@@ -28,7 +28,7 @@ void parse_vardeclation(){
       hold_token = get_token();
     }
     putback(hold_token);
-    printf("token type %d\n",hold_token.type);
+    // printf("token type %d\n",hold_token.type);
   }else {
     return;
   }
@@ -62,10 +62,11 @@ void parse_expression(){
  */
 void parse_subexpression_TS(){
   Token_t hold_token = tokens[p_token];
-  printf("Parse_TS hold_token is %d\n",hold_token.type);
+  // printf("Parse_TS hold_token is %d\n",hold_token.type);
   switch (hold_token.type)
   {
   case TK_PLUS:
+    printf("recognize '+' token\n");
     hold_token = get_token(); // skip + token
     parse_subexpression_T();
     hold_token = tokens[p_token];
@@ -77,6 +78,7 @@ void parse_subexpression_TS(){
       // handle_error(ERROR_x11,hold_token.row,hold_token.col);
       break;
   case TK_MINUS:
+    printf("recognize '-' token\n");
     hold_token = get_token(); // skip - token
     parse_subexpression_T();
     hold_token = tokens[p_token];
@@ -106,7 +108,7 @@ void parse_subexpression_T(){
   if(hold_token.type == TK_MUL || hold_token.type == TK_DIV){
     // printf("recognize '*' or '/' token\n");
     parse_subexpression_FS();
-    printf("quit parse_FS p_token type ******** %d\n",tokens[p_token].type);
+    // printf("quit parse_FS p_token type ******** %d\n",tokens[p_token].type);
     // hold_token = get_token();
   }
   else
@@ -139,7 +141,7 @@ void parse_subexpression_FS(){
     printf("recognize '/' token\n");
     hold_token = get_token();  // skip / token
     parse_subexpression_F();
-    printf("after the parse_F, the p_token is===%d\n",p_token);
+    // printf("after the parse_F, the p_token is===%d\n",p_token);
     hold_token = tokens[p_token];
     if(hold_token.type == TK_MUL || hold_token.type == TK_DIV){
       parse_subexpression_FS();
@@ -164,7 +166,7 @@ void parse_subexpression_FS(){
 void parse_subexpression_F(){
   parse_subexpression_D();
   Token_t hold_token = tokens[p_token];
-  printf("p_token ******** %d, token type=> %d\n",p_token,hold_token.type);
+  // printf("p_token ******** %d, token type=> %d\n",p_token,hold_token.type);
   if(hold_token.type == TK_EQ || hold_token.type == TK_LESS){
     parse_subexpression_D1();
     // hold_token = get_token();
@@ -183,7 +185,10 @@ void parse_subexpression_F(){
 void parse_subexpression_D1(){
   Token_t hold_token = tokens[p_token];
   if(hold_token.type == TK_EQ || hold_token.type == TK_LESS){
-    printf("recognize '=' token \n");
+    if(hold_token.type == TK_EQ)
+      printf("recognize '=' token \n");
+    else 
+      printf("recognize '<' token \n");
     hold_token = get_token(); // skip '=' or '<' token
     // may be more consideration
     parse_subexpression_D();
@@ -201,7 +206,7 @@ void parse_subexpression_D1(){
  */
 void parse_subexpression_D(){
   Token_t hold_token = tokens[p_token];
-  printf("Parse_D token is %d\n",hold_token.type);
+  // printf("Parse_D token is %d\n",hold_token.type);
   switch (hold_token.type)
   {
   case TK_NUM:
@@ -216,13 +221,13 @@ void parse_subexpression_D(){
     parse_expression();
     hold_token = tokens[p_token];
     match(hold_token,TK_RP); // match )
-    return;
+    break;
   case TK_NOT: 
     printf("recognize '~' token\n");
     hold_token = get_token(); // skip ~
     parse_expression();
-    break;
-  default:
+    return;  // prevent call twice get_token() function
+   default:
     handle_error(ERROR_x11,hold_token.row,hold_token.col);
     break;
   }
@@ -254,8 +259,6 @@ void parse_assg_stmt(){
   hold_token = get_token();
   match(hold_token, TK_ASSIGN);
   parse_expression();
-  // hold_token = get_token();
-  // printf("p_token $$$$$$$$$$$$$$$%d\n",p_token);
 }
 
 /**
@@ -273,8 +276,7 @@ void parse_read_stmt(){
   match(hold_token, TK_IDENTIFIER);
   hold_token = get_token();
   match(hold_token, TK_RP);
-  // hold_token = get_token(); 
-  printf("p_token ******** %d, token type=> %d\n",p_token,hold_token.type);
+  // printf("p_token ******** %d, token type=> %d\n",p_token,hold_token.type);
 }
 
 /**
@@ -291,7 +293,7 @@ void parse_write_stmt(){
   // hold_token = get_token();
   parse_expression();
   hold_token = tokens[p_token];
-  printf("over the call the token type is %d\n",hold_token.type);
+  // printf("over the call the token type is %d\n",hold_token.type);
   match(hold_token, TK_RP);
   hold_token = get_token(); 
 }
@@ -303,18 +305,22 @@ void parse_write_stmt(){
  * call handle_error() function on failure 
  */
 void parse_if_stmt(){
+  printf("recognize 'if' token\n");
   Token_t hold_token = get_token();  //skip if keyword
   parse_expression();
   hold_token = tokens[p_token];
   if (TK_THEN == hold_token.type) {
+    printf("recognize 'then' token\n");
     hold_token = get_token(); // skip then keyword
     parse_stmt_list();
     hold_token = tokens[p_token];
     if (TK_ELSE == hold_token.type) {
+      printf("recognize 'else' token\n");
       hold_token = get_token(); // skip else keyword
       parse_stmt_list();
       hold_token = tokens[p_token];
       if (TK_FI == hold_token.type) {
+        printf("recognize 'fi' token\n");
         hold_token = get_token();
       } else {
         handle_error(ERROR_x07,hold_token.row,hold_token.col);  // lack fi
@@ -389,7 +395,7 @@ void parse_statement(){
 void parse_stmt_list(){
   parse_statement();
   Token_t hold_token = tokens[p_token];
-  printf("token type ===== %d\n",hold_token.type);
+  // printf("token type ===== %d\n",hold_token.type);
   if (TK_SEMI == hold_token.type) {
     match(hold_token, TK_SEMI);
     hold_token = get_token(); // skip ;

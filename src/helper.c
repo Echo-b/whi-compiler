@@ -37,7 +37,7 @@ Token_t get_token() {
     return t;
   }
   t = tokens[p_token];
-  printf("the p_token is => %d ,hit the token => %d, the next token is => %d\n",p_token,tokens[p_token].type,tokens[p_token+1].type);
+  // printf("the p_token is => %d ,hit the token => %d, the next token is => %d\n",p_token,tokens[p_token].type,tokens[p_token+1].type);
   ++p_token;
   return t;
 }
@@ -88,6 +88,14 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x04,hold.row,hold.col);
+        return (-1);
+      }
+    case TK_SKIP:
+      if (hold.type == TK_SKIP) {
+        printf("token 'skip' recognize!\n");
+        break;
+      } else {
+        handle_error(ERROR_x11,hold.row,hold.col);
         return (-1);
       }
     case TK_COMMA:
