@@ -73,6 +73,15 @@ int match(Token_t hold, int expected) {
         handle_error(ERROR_x00,hold.row,hold.col);
         return (-1);
       }
+    case TK_NUM:
+      if (hold.type == TK_NUM) {
+        printf("token 'num' recognize!\n");
+        break;
+      } else {
+        // printf("match error! expect ';'\n");
+        handle_error(ERROR_x00,hold.row,hold.col);
+        return (-1);
+      }
     case TK_IDENTIFIER:
       if (serchslot(hold.str) != -1 && hold.type == TK_IDENTIFIER) {
         printf("token identifier recognize!\n");
@@ -121,9 +130,25 @@ int match(Token_t hold, int expected) {
         handle_error(ERROR_x11,hold.row,hold.col);
         return (-1);
       }
-      case TK_WRITE:
+    case TK_WRITE:
       if (hold.type == TK_WRITE) {
         printf("token 'write' recognize!\n");
+        break;
+      } else {
+        handle_error(ERROR_x11,hold.row,hold.col);
+        return (-1);
+      }
+    case TK_WHILE:
+      if (hold.type == TK_WHILE) {
+        printf("token 'while' recognize!\n");
+        break;
+      } else {
+        handle_error(ERROR_x11,hold.row,hold.col);
+        return (-1);
+      }
+    case TK_NOT:
+      if (hold.type == TK_NOT) {
+        printf("token '~' recognize!\n");
         break;
       } else {
         handle_error(ERROR_x11,hold.row,hold.col);
