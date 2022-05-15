@@ -5,8 +5,10 @@
 #include "error.c"
 #include "sys.c"
 
-void generate_instr_lit() {
-  fprintf(ssam_out, "%s", "lit 0\n");
+void generate_instr_lit(int a) {
+  char instr[8] = {'\0'};
+  sprintf(instr, "lit %d\n", a);
+  fprintf(ssam_out, "%s", instr);
 }
 
 void generate_instr_wrt() {
@@ -76,7 +78,7 @@ void generate_instr_lod(Token_t t) {
 }
 
 void generate_instr_var(Token_t t) {
-  generate_instr_lit();
+  generate_instr_lit(0);
   generate_instr_sto(t);
 }
 

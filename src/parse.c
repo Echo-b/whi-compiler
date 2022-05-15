@@ -15,17 +15,17 @@
  * call handle_error() function on unsuccessful 
  */
 void parse_vardeclation(){
-  // generate_instr_int(Gsyspos);
+  generate_instr_int(Gsyspos);
   Token_t hold_token = get_token(); // skip var keyword
   match(hold_token,TK_IDENTIFIER);
-  // generate_instr_var(hold_token);
+  generate_instr_var(hold_token);
   hold_token = get_token();
   if(hold_token.type == TK_COMMA){
     while(hold_token.type != TK_SEMI){
       match(hold_token, TK_COMMA);
       hold_token = get_token();
       match(hold_token, TK_IDENTIFIER);
-      // generate_instr_var(hold_token);
+      generate_instr_var(hold_token);
       hold_token = get_token();
     }
     putback(hold_token);
@@ -70,6 +70,7 @@ void parse_subexpression_TS(){
     printf("recognize '+' token\n");
     hold_token = get_token(); // skip + token
     parse_subexpression_T();
+    generate_instr_add();
     hold_token = tokens[p_token];
     if(hold_token.type == TK_PLUS || hold_token.type == TK_MINUS){
       parse_subexpression_TS();
@@ -82,6 +83,7 @@ void parse_subexpression_TS(){
     printf("recognize '-' token\n");
     hold_token = get_token(); // skip - token
     parse_subexpression_T();
+    generate_instr_sub();
     hold_token = tokens[p_token];
     if(hold_token.type == TK_PLUS || hold_token.type == TK_MINUS){
       parse_subexpression_TS();
@@ -211,9 +213,11 @@ void parse_subexpression_D(){
   switch (hold_token.type)
   {
   case TK_NUM:
+    generate_instr_lit(atoi(hold_token.str));
     match(hold_token,TK_NUM);
     break;
   case TK_IDENTIFIER:
+    generate_instr_lod(hold_token);
     match(hold_token,TK_IDENTIFIER);
     break;
   case TK_LP:
@@ -256,10 +260,12 @@ void parse_skip_stmt(){
  */
 void parse_assg_stmt(){
   Token_t hold_token = get_token();
+  Token_t gen_token = hold_token;
   match(hold_token, TK_IDENTIFIER);
   hold_token = get_token();
   match(hold_token, TK_ASSIGN);
   parse_expression();
+  generate_instr_sto(gen_token);
 }
 
 /**
@@ -293,6 +299,7 @@ void parse_write_stmt(){
   match(hold_token, TK_LP);
   // hold_token = get_token();
   parse_expression();
+  generate_instr_wrt();
   hold_token = tokens[p_token];
   // printf("over the call the token type is %d\n",hold_token.type);
   match(hold_token, TK_RP);
