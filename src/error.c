@@ -22,6 +22,7 @@ struct grammer_error{
   {ERROR_x09, "missing )"},
   {ERROR_x10, "declaration missing ','"},
   {ERROR_x11, "unknown mistake"},
+  {ERROR_x12, "expect ':='"},
 };
 
 /**

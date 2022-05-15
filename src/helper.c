@@ -111,7 +111,7 @@ int match(Token_t hold, int expected) {
         printf("token ':=' recognize!\n");
         break;
       } else {
-        printf("match error!\n");
+        handle_error(ERROR_x12,hold.row,hold.col);
         return (-1);
       }
     case TK_LP:

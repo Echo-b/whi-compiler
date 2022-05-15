@@ -442,6 +442,7 @@ int parse(){
     return 0;
   }else {
     handle_error(ERROR_x11,tokens[p_token].row,tokens[p_token].col);
+    return -1;
   }
 }
 
