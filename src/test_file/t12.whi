@@ -1,0 +1,6 @@
+
+var a, b, res;
+read(a);
+read(b);
+res := (a < b) * b + (~(a < b)) * a;
+write(res)

@@ -24,6 +24,16 @@ enum {
   ERROR_x11,   // unknown mistake
   ERROR_x12,   // if statement must have else
   ERROR_x13,   // if statement must have then
+  ERROR_x14,   // expect :=
+  ERROR_x15,   // expect 'read' keyword
+  ERROR_x16,   // expect 'write' keyword
+  ERROR_x17,   // expect '~'
+  ERROR_x18,   // expect 'while' keyword
+  ERROR_x19,   // expect 'if' keyword
+  ERROR_x20,   // expect 'skip' keyword
+  ERROR_x21,   // expect a arithmetic operators 
+  ERROR_x22,   // expect a relational operator
+  ERROR_x23,   // expect a decimial int number
 };
 
 enum {
@@ -116,5 +126,7 @@ static FILE* ssam_out;
 static int add_gsyt_flag = 0;
 
 static int row = 1;
+
+static int instr_cnt = 0;
 
 #endif

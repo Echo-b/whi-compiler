@@ -1,7 +1,10 @@
-var x, y, g, m, temp;
 
-x := 45;
-y := 27;
+var x0, y0, x, y, g, m, temp;
+
+read(x);
+read(y);
+x0 := x;
+y0 := y;
 x := x-x/y*y;
 
 while ~(x = 0) do
@@ -11,6 +14,6 @@ while ~(x = 0) do
   x := x-x/y*y
 od;
 g := y;
-m := 45*27/g;
+m := x0*y0/g;
 write(g);
 write(m)

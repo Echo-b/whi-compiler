@@ -1,0 +1,9 @@
+var x, y, z;
+read(x);
+read(y);
+if x < y then
+  z := y
+else
+  z := x
+fi;
+write(z)

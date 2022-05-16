@@ -1,0 +1,7 @@
+
+var m, a, b, res;
+read(m);
+a := (m < 0) * (0 - m);
+b := (~(m < 0)) * m;
+res := a + b;
+write(res)

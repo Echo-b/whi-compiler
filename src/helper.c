@@ -66,25 +66,25 @@ int match(Token_t hold, int expected) {
   switch (expected) {
     case TK_SEMI:
       if (hold.type == TK_SEMI) {
-        printf("token ';' recognize!\n");
+        Print("token ';' parsing via!");
         break;
       } else {
-        // printf("match error! expect ';'\n");
+        // Print("match error! expect ';'");
         handle_error(ERROR_x00,hold.row,hold.col);
         return (-1);
       }
     case TK_NUM:
       if (hold.type == TK_NUM) {
-        printf("token 'num' recognize!\n");
+        Print("token 'num' parsing via!");
         break;
       } else {
-        // printf("match error! expect ';'\n");
-        handle_error(ERROR_x00,hold.row,hold.col);
+        // Print("match error! expect ';'");
+        handle_error(ERROR_x23,hold.row,hold.col);
         return (-1);
       }
     case TK_IDENTIFIER:
       if (serchslot(hold.str) != -1 && hold.type == TK_IDENTIFIER) {
-        printf("token identifier recognize!\n");
+        Print("token identifier parsing via!");
         break;
       } else {
         handle_error(ERROR_x04,hold.row,hold.col);
@@ -92,39 +92,39 @@ int match(Token_t hold, int expected) {
       }
     case TK_SKIP:
       if (hold.type == TK_SKIP) {
-        printf("token 'skip' recognize!\n");
+        Print("token 'skip' parsing via!");
         break;
       } else {
-        handle_error(ERROR_x11,hold.row,hold.col);
+        handle_error(ERROR_x20,hold.row,hold.col);
         return (-1);
       }
     case TK_COMMA:
       if (hold.type == TK_COMMA) {
-        printf("token ',' recognize!\n");
+        Print("token ',' parsing via!");
         break;
       } else {
-        printf("match error!\n");
+        handle_error(ERROR_x10,hold.row,hold.col);
         return (-1);
       }
     case TK_ASSIGN:
       if (hold.type == TK_ASSIGN) {
-        printf("token ':=' recognize!\n");
+        Print("token ':=' parsing via!");
         break;
       } else {
-        handle_error(ERROR_x12,hold.row,hold.col);
+        handle_error(ERROR_x14,hold.row,hold.col);
         return (-1);
       }
     case TK_LP:
       if (hold.type == TK_LP) {
-        printf("token '(' recognize!\n");
+        Print("token '(' parsing via!");
         break;
       } else {
-        handle_error(ERROR_x09,hold.row,hold.col);
+        handle_error(ERROR_x08,hold.row,hold.col);
         return (-1);
       }
     case TK_RP:
       if (hold.type == TK_RP) {
-        printf("token ')' recognize!\n");
+        Print("token ')' parsing via!");
         break;
       } else {
         handle_error(ERROR_x09,hold.row,hold.col);
@@ -132,38 +132,46 @@ int match(Token_t hold, int expected) {
       }
     case TK_READ:
       if (hold.type == TK_READ) {
-        printf("token 'read' recognize!\n");
+        Print("token 'read' parsing via!");
         break;
       } else {
-        handle_error(ERROR_x11,hold.row,hold.col);
+        handle_error(ERROR_x15,hold.row,hold.col);
         return (-1);
       }
     case TK_WRITE:
       if (hold.type == TK_WRITE) {
-        printf("token 'write' recognize!\n");
+        Print("token 'write' parsing via!");
         break;
       } else {
-        handle_error(ERROR_x11,hold.row,hold.col);
+        handle_error(ERROR_x16,hold.row,hold.col);
         return (-1);
       }
     case TK_WHILE:
       if (hold.type == TK_WHILE) {
-        printf("token 'while' recognize!\n");
+        Print("token 'while' parsing via!");
         break;
       } else {
-        handle_error(ERROR_x11,hold.row,hold.col);
+        handle_error(ERROR_x18,hold.row,hold.col);
+        return (-1);
+      }
+    case TK_IF:
+      if (hold.type == TK_IF) {
+        Print("token 'if' parsing via!");
+        break;
+      } else {
+        handle_error(ERROR_x19,hold.row,hold.col);
         return (-1);
       }
     case TK_NOT:
       if (hold.type == TK_NOT) {
-        printf("token '~' recognize!\n");
+        Print("token '~' parsing via!");
         break;
       } else {
-        handle_error(ERROR_x11,hold.row,hold.col);
+        handle_error(ERROR_x17,hold.row,hold.col);
         return (-1);
       }
     default:
-      printf("no recognize token type!\n");
+      Print("no recognize token type!");
       break;
   }
   // ++parse_index;
