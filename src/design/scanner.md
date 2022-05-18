@@ -84,7 +84,7 @@ int regcomp(regex_t *preg, const char *regex, int cflags);
 `REG_ICASE` 匹配字母时忽略大小写。
 `REG_NOSUB` 不存储匹配后的结果。
 `REG_NEWLINE` 识别换行符，以便`$`从行尾开始匹配，`^`从行的开头开始匹配。
- 
+
 
 #### `regmatch_t `结构
 ```c
@@ -223,7 +223,7 @@ default:;
 
 #### 测试
 测试文件
-```
+```clike
 var x0, y0, x, y, g, m, temp;
 x0 := x;
 y0 := y;

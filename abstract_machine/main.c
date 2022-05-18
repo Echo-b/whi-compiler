@@ -10,14 +10,14 @@ int run_code(FILE*);
 
 int main(int argc, const char * argv[]) {
 
-    printf("START\n");
+    //printf("START\n");
 
     const char* infile_name = argv[1];
     FILE* fp = fopen(infile_name, "r");
     run_code(fp);
     fclose(fp);
 
-    printf("END\n");
+    //printf("END\n");
 
     return 0;
 }
