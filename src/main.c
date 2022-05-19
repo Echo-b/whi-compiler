@@ -1,7 +1,7 @@
 #include "parse.c"
 #include "scanner.c"
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) {              
   if (argc < 2) {
     printf("parm is not enough!\n");
     exit(-1);
@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
     init_token(str, &successful);
   }
   tokens[nr_token++].type = TK_EOF;
-  show_token();
+  // show_token();
   parse();
   show_systable();
   fclose(fp);
