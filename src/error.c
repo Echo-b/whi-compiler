@@ -34,6 +34,8 @@ struct grammer_error{
   {ERROR_x21, "expect a arithmetic operators such as '+','-','*','/'"},
   {ERROR_x22, "expect a relational operator such as '=' and '<'"},
   {ERROR_x23, "expect a decimial int number"},
+  {ERROR_x24, "program aborted unexpectedly, exited with -1"},
+  {ERROR_x25, "extra ';'"},
 };
 
 /**
@@ -42,18 +44,16 @@ struct grammer_error{
  * @param erroinfo 
  */
 void Log(int errorkind, int row, int col) {
-  printf(RED"[error]:%s at positon (%d,%d)\n"NONE,errors[errorkind].str,row, col);
-  exit(-1);
-  //printf("%s\n", errors[errorkind].str);
+  if(errorkind == ERROR_x24)
+    printf(RED"[error] %s \n"NONE,errors[errorkind].str);
+  else
+    printf(RED"[error] %s at positon (%d,%d)\n"NONE,errors[errorkind].str,row, col);
+  // exit(-1);
 }
 
 void Print(char *str){
   printf(BLUE"[info] "NONE);
   printf("%s\n",str);
-}
-
-void Assert(char* errinfo) {
-  assert(errinfo);
 }
 
 // more TODO

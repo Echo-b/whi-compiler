@@ -34,6 +34,8 @@ enum {
   ERROR_x21,   // expect a arithmetic operators 
   ERROR_x22,   // expect a relational operator
   ERROR_x23,   // expect a decimial int number
+  ERROR_x24,   // program aborted unexpectedly, exited with -1
+  ERROR_x25,   // extra ';'
 };
 
 enum {
@@ -117,7 +119,7 @@ static int p_token = 0;
 
 char* keyword_table[] = {"var", "skip", "read", "write", "if", "then", "else", "fi", "while", "do", "od"};
 
-char errinfo[128] = {'0'};
+static int parse_flag = 0;
 
 static Token_t put_token = {-1, " ", -1};
 

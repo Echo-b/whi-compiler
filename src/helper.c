@@ -15,16 +15,6 @@ void putback(Token_t t) {
 }
 
 /**
- * @brief Set the errorinfo object
- * if we hit a error then we call set_errorinfo() to set it
- * and call specific handle_error() function to handle it
- * @param info 
- */
-void set_errorinfo(char* info) {
-  strcpy(errinfo, info);
-}
-
-/**
  * @brief Get the token object
  * return the next token in tokens array
  * @return Token_t
@@ -49,6 +39,7 @@ Token_t get_token() {
  */
 void handle_error(int errorkind, int row, int col) {
   Log(errorkind, row, col);
+  parse_flag = 1;
 }
 
 /**
@@ -61,8 +52,6 @@ void handle_error(int errorkind, int row, int col) {
  * @return int 
  */
 int match(Token_t hold, int expected) {
-  // char instr[8] = {'\0'};
-  // printf("token ====> %d\n", hold.type);
   switch (expected) {
     case TK_SEMI:
       if (hold.type == TK_SEMI) {
@@ -71,7 +60,8 @@ int match(Token_t hold, int expected) {
       } else {
         // Print("match error! expect ';'");
         handle_error(ERROR_x00,hold.row,hold.col);
-        return (-1);
+        // return (-1);
+        break;
       }
     case TK_NUM:
       if (hold.type == TK_NUM) {
@@ -80,7 +70,8 @@ int match(Token_t hold, int expected) {
       } else {
         // Print("match error! expect ';'");
         handle_error(ERROR_x23,hold.row,hold.col);
-        return (-1);
+        // return (-1);
+        break;
       }
     case TK_IDENTIFIER:
       if (serchslot(hold.str) != -1 && hold.type == TK_IDENTIFIER) {
@@ -88,7 +79,8 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x04,hold.row,hold.col);
-        return (-1);
+        // return (-1);
+        break;
       }
     case TK_SKIP:
       if (hold.type == TK_SKIP) {
@@ -96,7 +88,8 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x20,hold.row,hold.col);
-        return (-1);
+        // return (-1);
+        break;
       }
     case TK_COMMA:
       if (hold.type == TK_COMMA) {
@@ -104,7 +97,8 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x10,hold.row,hold.col);
-        return (-1);
+        // return (-1);
+        break;
       }
     case TK_ASSIGN:
       if (hold.type == TK_ASSIGN) {
@@ -112,7 +106,9 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x14,hold.row,hold.col);
-        return (-1);
+        break;
+        // return (-1);
+        break;
       }
     case TK_LP:
       if (hold.type == TK_LP) {
@@ -120,7 +116,8 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x08,hold.row,hold.col);
-        return (-1);
+        // return (-1);
+        break;
       }
     case TK_RP:
       if (hold.type == TK_RP) {
@@ -128,7 +125,8 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x09,hold.row,hold.col);
-        return (-1);
+        // return (-1);
+        break;
       }
     case TK_READ:
       if (hold.type == TK_READ) {
@@ -136,7 +134,8 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x15,hold.row,hold.col);
-        return (-1);
+        // return (-1);
+        break;
       }
     case TK_WRITE:
       if (hold.type == TK_WRITE) {
@@ -144,7 +143,8 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x16,hold.row,hold.col);
-        return (-1);
+        // return (-1);
+        break;
       }
     case TK_WHILE:
       if (hold.type == TK_WHILE) {
@@ -152,7 +152,8 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x18,hold.row,hold.col);
-        return (-1);
+        // return (-1);
+        break;
       }
     case TK_IF:
       if (hold.type == TK_IF) {
@@ -160,7 +161,8 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x19,hold.row,hold.col);
-        return (-1);
+        // return (-1);
+        break;
       }
     case TK_NOT:
       if (hold.type == TK_NOT) {
@@ -168,7 +170,8 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x17,hold.row,hold.col);
-        return (-1);
+        // return (-1);
+        break;
       }
     default:
       Print("no recognize token type!");

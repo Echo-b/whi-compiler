@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
     init_token(str, &successful);
   }
   tokens[nr_token++].type = TK_EOF;
-  // show_token();
+  show_token();
   parse();
   show_systable();
   fclose(fp);

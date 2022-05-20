@@ -27,6 +27,8 @@ void parse_vardeclation(){
       match(hold_token, TK_IDENTIFIER);
       // generate_instr_var(hold_token);
       hold_token = get_token();
+      if(hold_token.type == TK_READ)
+        break;
     }
     putback(hold_token);
     // printf("token type %d\n",hold_token.type);
@@ -274,6 +276,7 @@ void parse_assg_stmt(){
 /**
  * @brief 
  * parse  read statement and generate read instr
+ * read(V)
  * nothing on successful
  * call handle_error() function on failure 
  */
@@ -293,6 +296,7 @@ void parse_read_stmt(){
 /**
  * @brief 
  * parse write statement and generate write instr
+ * write(E)
  * nothing on successful
  * call handle_error() function on failure 
  */
@@ -313,6 +317,7 @@ void parse_write_stmt(){
 /**
  * @brief 
  * parse if statement
+ * if E then L else L fi
  * nothing on successful
  * call handle_error() function on failure 
  */
@@ -349,6 +354,7 @@ void parse_if_stmt(){
 /**
  * @brief 
  * parse while statement
+ * while E do L od
  * nothing on successful
  * call handle_error() function on failure 
  */
@@ -419,13 +425,14 @@ void parse_stmt_list(){
     parse_stmt_list();
     // hold_token = get_token();
   } else {
-    return;
+      return;
   }
 }
 
 /**
  * @brief 
  * parse program 
+ * P ::= X[';'L]
  * nothing on successful
  * call handle_error() function on failure 
  */
@@ -433,7 +440,6 @@ void parse_program(){
   Token_t hold_token = get_token();
   if (TK_VAR == hold_token.type) {
     parse_vardeclation();
-    // Print("----------%d----------",p_token);
     hold_token = get_token();
     match(hold_token, TK_SEMI);
     parse_stmt_list();
@@ -452,12 +458,11 @@ void parse_program(){
  */
 int parse(){
   parse_program();
-  // Print("p_token ** %d",tokens[p_token].type);
-  if(tokens[p_token].type == TK_EOF){
+  if(tokens[p_token].type == TK_EOF && !parse_flag){
     printf(GREEN"[success] parse over, congratulations!!!\n"NONE);
     return 0;
   }else {
-    handle_error(ERROR_x11,tokens[p_token].row,tokens[p_token].col);
+    handle_error(ERROR_x24,tokens[p_token].row,tokens[p_token].col);
     return -1;
   }
 }
