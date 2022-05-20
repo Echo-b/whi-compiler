@@ -102,7 +102,7 @@ static bool make_token(char* e) {
               tokens[nr_token].type = ret;
             } else {
               tokens[nr_token].type = rules[i].token_type;
-              if (add_gsyt_flag == 1) {
+              if (add_gsyt_flag == 1 && serchslot(tokens[nr_token].str) == -1) {
                 if (addglob(tokens[nr_token].str) == -1)
                   return (-1);
               }

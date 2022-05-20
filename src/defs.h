@@ -11,7 +11,7 @@
 
 enum {
   ERROR_x00,   // declaration missing ;
-  ERROR_x01,   // declaration syntax error
+  ERROR_x01,   // missing :=
   ERROR_x02,   // division by zero
   ERROR_x03,   // expression syntax error
   ERROR_x04,   // variable undeclaration
@@ -36,6 +36,14 @@ enum {
   ERROR_x23,   // expect a decimial int number
   ERROR_x24,   // program aborted unexpectedly, exited with -1
   ERROR_x25,   // extra ';'
+  ERROR_x26,   // extra ','
+  ERROR_x27,   // extra (
+  ERROR_x28,   // extra )
+  ERROR_x29,   // there must be a variable inside the parentheses
+  ERROR_x30,   // there can only be one variable within the parentheses of a read expression
+  ERROR_x31,   // operator is required between two identifiers
+  ERROR_x32,   // operator is required between two num
+  ERROR_x33,   // continuous operator
 };
 
 enum {
@@ -121,7 +129,7 @@ char* keyword_table[] = {"var", "skip", "read", "write", "if", "then", "else", "
 
 static int parse_flag = 0;
 
-static Token_t put_token = {-1, " ", -1};
+static Token_t put_token = {-1, " ", -1,-1,-1};
 
 static FILE* ssam_out;
 

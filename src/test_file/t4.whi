@@ -1,7 +1,13 @@
-var x1,x2,x3
-read(x3);
-while x1<x3 do
-	x1 := x1+1;
-	x2 := x2+x1
-od;
-write(x2)
+var x1, x2,,x3
+read ((x1 x3));
+if (x9 = 0 
+	x1 = 5
+else
+	skip
+fi
+x1 := 3;
+while (x1 <= x3 ))
+	x1 = x1+1
+	x2 = x2+x1
+od
+write x2))

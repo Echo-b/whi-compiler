@@ -39,7 +39,6 @@ Token_t get_token() {
  */
 void handle_error(int errorkind, int row, int col) {
   Log(errorkind, row, col);
-  parse_flag = 1;
 }
 
 /**
@@ -60,7 +59,6 @@ int match(Token_t hold, int expected) {
       } else {
         // Print("match error! expect ';'");
         handle_error(ERROR_x00,hold.row,hold.col);
-        // return (-1);
         break;
       }
     case TK_NUM:
@@ -70,7 +68,6 @@ int match(Token_t hold, int expected) {
       } else {
         // Print("match error! expect ';'");
         handle_error(ERROR_x23,hold.row,hold.col);
-        // return (-1);
         break;
       }
     case TK_IDENTIFIER:
@@ -79,7 +76,6 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x04,hold.row,hold.col);
-        // return (-1);
         break;
       }
     case TK_SKIP:
@@ -88,7 +84,6 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x20,hold.row,hold.col);
-        // return (-1);
         break;
       }
     case TK_COMMA:
@@ -97,7 +92,6 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x10,hold.row,hold.col);
-        // return (-1);
         break;
       }
     case TK_ASSIGN:
@@ -107,7 +101,6 @@ int match(Token_t hold, int expected) {
       } else {
         handle_error(ERROR_x14,hold.row,hold.col);
         break;
-        // return (-1);
         break;
       }
     case TK_LP:
@@ -116,7 +109,6 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x08,hold.row,hold.col);
-        // return (-1);
         break;
       }
     case TK_RP:
@@ -125,7 +117,6 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x09,hold.row,hold.col);
-        // return (-1);
         break;
       }
     case TK_READ:
@@ -134,7 +125,6 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x15,hold.row,hold.col);
-        // return (-1);
         break;
       }
     case TK_WRITE:
@@ -143,7 +133,6 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x16,hold.row,hold.col);
-        // return (-1);
         break;
       }
     case TK_WHILE:
@@ -152,7 +141,6 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x18,hold.row,hold.col);
-        // return (-1);
         break;
       }
     case TK_IF:
@@ -161,7 +149,6 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x19,hold.row,hold.col);
-        // return (-1);
         break;
       }
     case TK_NOT:
@@ -170,14 +157,12 @@ int match(Token_t hold, int expected) {
         break;
       } else {
         handle_error(ERROR_x17,hold.row,hold.col);
-        // return (-1);
         break;
       }
     default:
       Print("no recognize token type!");
       break;
   }
-  // ++parse_index;
   return (0);
 }
 

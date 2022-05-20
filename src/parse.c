@@ -19,19 +19,54 @@ void parse_vardeclation(){
   Token_t hold_token = get_token(); // skip var keyword
   match(hold_token,TK_IDENTIFIER);
   // generate_instr_var(hold_token);
+
+  // missing comma 
+  if(TK_IDENTIFIER == tokens[p_token].type){
+    handle_missing(ERROR_x10,hold_token.row,hold_token.col);
+  }
+  
   hold_token = get_token();
   if(hold_token.type == TK_COMMA){
     while(hold_token.type != TK_SEMI){
       match(hold_token, TK_COMMA);
+
+      // extra comma
+      if(TK_COMMA == tokens[p_token].type){
+        handle_extra(ERROR_x26,hold_token.row,hold_token.col);
+      }
+
       hold_token = get_token();
       match(hold_token, TK_IDENTIFIER);
       // generate_instr_var(hold_token);
+
+      // missing comma 
+      if(TK_IDENTIFIER == tokens[p_token].type){
+        handle_missing(ERROR_x10,hold_token.row,hold_token.col);
+      }
+
+      // missing semi colon
+      if(TK_READ == tokens[p_token].type || TK_WHILE == tokens[p_token].type 
+           || TK_WRITE == tokens[p_token].type || TK_IF == tokens[p_token].type 
+           || TK_SKIP == tokens[p_token].type){
+        handle_missing(ERROR_x00,hold_token.row,hold_token.col);
+      }
+
+      // only variable declaration statements  =====> normal parse
+      if(TK_EOF == tokens[p_token].type){
+        putback(tokens[p_token]);
+        return;
+      }
+
       hold_token = get_token();
-      if(hold_token.type == TK_READ)
-        break;
+  
+      // only variable declaration statements and has a extra semi colon
+      if(TK_EOF == tokens[p_token].type){
+        handle_error(ERROR_x25,hold_token.row,hold_token.col);
+        return;
+      }
+      // printf("token type is %d\n",hold_token.type);
     }
     putback(hold_token);
-    // printf("token type %d\n",hold_token.type);
   }else {
     return;
   }
@@ -49,11 +84,9 @@ void parse_expression(){
   Token_t hold_token = tokens[p_token];
   if(hold_token.type == TK_PLUS || hold_token.type == TK_MINUS){
     parse_subexpression_TS();
-    // hold_token = get_token();
   }
   else
     return;
-    // handle_error(ERROR_x11,hold_token.row,hold_token.col);
 }
 
 
@@ -65,12 +98,17 @@ void parse_expression(){
  */
 void parse_subexpression_TS(){
   Token_t hold_token = tokens[p_token];
-  // printf("Parse_TS hold_token is %d\n",hold_token.type);
   switch (hold_token.type)
   {
   case TK_PLUS:
     Print("token '+' parsing via");
     hold_token = get_token(); // skip + token
+
+    // continuous operator
+    if(TK_PLUS == tokens[p_token].type){
+      handle_extra(ERROR_x33,hold_token.row,hold_token.col);
+    }
+
     parse_subexpression_T();
     // generate_instr_add();
     hold_token = tokens[p_token];
@@ -79,11 +117,16 @@ void parse_subexpression_TS(){
       break;
     }
     else
-      // handle_error(ERROR_x11,hold_token.row,hold_token.col);
       break;
   case TK_MINUS:
     Print("token '-' parsing via");
     hold_token = get_token(); // skip - token
+
+    // continuous operator
+    if(TK_MINUS == tokens[p_token].type){
+      handle_extra(ERROR_x33,hold_token.row,hold_token.col);
+    }
+
     parse_subexpression_T();
     // generate_instr_sub();
     hold_token = tokens[p_token];
@@ -92,13 +135,11 @@ void parse_subexpression_TS(){
       break;
     }
     else
-      // handle_error(ERROR_x11,hold_token.row,hold_token.col);
       break;
   default:
     handle_error(ERROR_x21,hold_token.row,hold_token.col);
     break;
   }
-  // hold_token = get_token();
 }
 
 /**
@@ -111,14 +152,10 @@ void parse_subexpression_T(){
   parse_subexpression_F();
   Token_t hold_token = tokens[p_token];
   if(hold_token.type == TK_MUL || hold_token.type == TK_DIV){
-    // Print("recognize '*' or '/' token");
     parse_subexpression_FS();
-    // Print("quit parse_FS p_token type ******** %d",tokens[p_token].type);
-    // hold_token = get_token();
   }
   else
     return;
-    // handle_error(ERROR_x11,hold_token.row,hold_token.col);
 }
 
 /**
@@ -134,6 +171,12 @@ void parse_subexpression_FS(){
   case TK_MUL:
     Print("token '*' parsing via");
     hold_token = get_token();   //skip * token
+
+    // continuous operator
+    if(TK_MUL == tokens[p_token].type){
+      handle_extra(ERROR_x33,hold_token.row,hold_token.col);
+    }
+
     parse_subexpression_F();
     // generate_instr_mul();
     hold_token = tokens[p_token];
@@ -146,22 +189,26 @@ void parse_subexpression_FS(){
   case TK_DIV:
     Print("token '/' parsing via");
     hold_token = get_token();  // skip / token
+
+    // continuous operator
+    if(TK_DIV == tokens[p_token].type){
+      handle_extra(ERROR_x33,hold_token.row,hold_token.col);
+    }
+
     parse_subexpression_F();
     // generate_instr_div();
-    // Print("after the parse_F, the p_token is===%d",p_token);
+
     hold_token = tokens[p_token];
     if(hold_token.type == TK_MUL || hold_token.type == TK_DIV){
       parse_subexpression_FS();
       break;
     }
     else
-      // handle_error(ERROR_x11,hold_token.row,hold_token.col);
      break;
   default:
     handle_error(ERROR_x21,hold_token.row,hold_token.col);
     break;
   }
-  // hold_token = get_token();
 }
 
 /**
@@ -173,14 +220,11 @@ void parse_subexpression_FS(){
 void parse_subexpression_F(){
   parse_subexpression_D();
   Token_t hold_token = tokens[p_token];
-  // Print("p_token ******** %d, token type=> %d",p_token,hold_token.type);
   if(hold_token.type == TK_EQ || hold_token.type == TK_LESS){
     parse_subexpression_D1();
-    // hold_token = get_token();
   }
   else
     return;
-    // handle_error(ERROR_x11,hold_token.row,hold_token.col);
 }
 
 /**
@@ -197,10 +241,15 @@ void parse_subexpression_D1(){
     else 
       Print("token '<' parsing via");
     hold_token = get_token(); // skip '=' or '<' token
+
+    // continuous operator
+    if(TK_EQ == tokens[p_token].type || TK_LESS == tokens[p_token].type){
+      handle_extra(ERROR_x33,hold_token.row,hold_token.col);
+    }
+
     // may be more consideration
     parse_subexpression_D();
     // generate_instr_equ();
-    // hold_token = get_token();
   }
   else
     handle_error(ERROR_x22,hold_token.row,hold_token.col);
@@ -214,23 +263,48 @@ void parse_subexpression_D1(){
  */
 void parse_subexpression_D(){
   Token_t hold_token = tokens[p_token];
-  // Print("Parse_D token is %d\n",hold_token.type);
   switch (hold_token.type)
   {
   case TK_NUM:
     // generate_instr_lit(atoi(hold_token.str));
     match(hold_token,TK_NUM);
+
+    // operator is required between two num
+    if(TK_NUM == tokens[p_token + 1].type){
+      handle_extra(ERROR_x32,hold_token.row,hold_token.col);
+    }
+
     break;
   case TK_IDENTIFIER:
     // generate_instr_lod(hold_token);
     match(hold_token,TK_IDENTIFIER);
+
+    // operator is required between two identifiers
+    if(TK_IDENTIFIER == tokens[p_token + 1].type){
+      handle_extra(ERROR_x31,hold_token.row,hold_token.col);
+    }
+
     break;
   case TK_LP:
     match(hold_token,TK_LP);  // match (
     hold_token = get_token(); // skip (
     parse_expression();
     hold_token = tokens[p_token];
+
+    // missing )
+    if(TK_RP != hold_token.type){
+      handle_missing(ERROR_x09,hold_token.row,hold_token.col);
+      hold_token = get_token();
+      putback(tokens[p_token]);
+    }
+
     match(hold_token,TK_RP); // match )
+
+    // extra )
+    if(TK_RP == tokens[p_token + 1].type){
+      handle_extra(ERROR_x28,tokens[p_token].row,tokens[p_token].col);
+    }
+
     break;
   case TK_NOT: 
     match(hold_token,TK_NOT);  
@@ -267,6 +341,12 @@ void parse_assg_stmt(){
   Token_t hold_token = get_token();
   Token_t gen_token = hold_token;
   match(hold_token, TK_IDENTIFIER);
+
+  // missing :=
+  if(TK_IDENTIFIER == tokens[p_token].type){
+    handle_missing(ERROR_x01,hold_token.row,hold_token.col);
+  }
+
   hold_token = get_token();
   match(hold_token, TK_ASSIGN);
   parse_expression();
@@ -283,14 +363,47 @@ void parse_assg_stmt(){
 void parse_read_stmt(){
   Token_t hold_token = get_token(); // get read keyword
   match(hold_token,TK_READ);
+
+  // missing (
+  if(TK_LP != tokens[p_token].type){
+    handle_missing(ERROR_x08,tokens[p_token].row,tokens[p_token].col);
+  }
+
   hold_token = get_token();
   match(hold_token, TK_LP);
+
+  // extra (
+  if(TK_LP == tokens[p_token].type){
+    handle_extra(ERROR_x27,tokens[p_token].row,tokens[p_token].col);
+  }
+
+  // missing identifier, there must be a variable inside the parentheses 
+  if(TK_IDENTIFIER != tokens[p_token].type){
+    handle_missing(ERROR_x29,tokens[p_token].row,tokens[p_token].col);
+  }
+
   hold_token = get_token();
   // generate_instr_read(hold_token);
   match(hold_token, TK_IDENTIFIER);
+
+  // extra identifier in parentheses
+  if(TK_IDENTIFIER == tokens[p_token].type){
+    handle_extra(ERROR_x30,tokens[p_token].row,tokens[p_token].col);
+  }
+
+  // missing )
+  if(TK_RP != tokens[p_token].type){
+    handle_missing(ERROR_x09,tokens[p_token].row,tokens[p_token].col);
+  }
+
   hold_token = get_token();
   match(hold_token, TK_RP);
-  // Print("p_token ******** %d, token type=> %d",p_token,hold_token.type);
+
+  // extra )
+  if(TK_RP == tokens[p_token].type){
+    handle_extra(ERROR_x28,tokens[p_token].row,tokens[p_token].col);
+  }
+
 }
 
 /**
@@ -303,15 +416,34 @@ void parse_read_stmt(){
 void parse_write_stmt(){
   Token_t hold_token = get_token(); // get write keyword
   match(hold_token,TK_WRITE);
+
+   // missing (
+  if(TK_LP != tokens[p_token].type){
+    handle_missing(ERROR_x08,tokens[p_token].row,tokens[p_token].col);
+  }
+
   hold_token = get_token();
   match(hold_token, TK_LP);
-  // hold_token = get_token();
+
   parse_expression();
   // generate_instr_wrt();
   hold_token = tokens[p_token];
-  // Print("over the call the token type is %d\n",hold_token.type);
+
+  // missing ) 
+  if(TK_RP != tokens[p_token].type){
+    handle_missing(ERROR_x09,tokens[p_token].row,tokens[p_token].col);
+    hold_token = get_token();
+    putback(tokens[p_token]);
+  }
+
   match(hold_token, TK_RP);
   hold_token = get_token(); 
+
+  // extra )
+  if(TK_RP == tokens[p_token].type){
+    handle_extra(ERROR_x28,tokens[p_token].row,tokens[p_token].col);
+  }
+
 }
 
 /**
@@ -327,16 +459,40 @@ void parse_if_stmt(){
   hold_token = get_token();  //skip if keyword
   parse_expression();
   hold_token = tokens[p_token];
+
+  // missing then keyword
+  if(TK_THEN != hold_token.type){
+    handle_missing(ERROR_x13,hold_token.row,hold_token.col);
+    hold_token = get_token();
+    putback(tokens[p_token]);
+  }
+
   if (TK_THEN == hold_token.type) {
     Print("token 'then' parsing via");
     hold_token = get_token(); // skip then keyword
     parse_stmt_list();
     hold_token = tokens[p_token];
+
+    // missing else keyword
+    if(TK_ELSE != hold_token.type){
+      handle_missing(ERROR_x12,hold_token.row,hold_token.col);
+      hold_token = get_token();
+      putback(tokens[p_token]);
+    }
+
     if (TK_ELSE == hold_token.type) {
       Print("token 'else' parsing via");
       hold_token = get_token(); // skip else keyword
       parse_stmt_list();
       hold_token = tokens[p_token];
+
+      // missing fi keyword
+      if(TK_FI != hold_token.type){
+        handle_missing(ERROR_x07,hold_token.row,hold_token.col);
+        hold_token = get_token();
+        putback(tokens[p_token]);
+      }
+
       if (TK_FI == hold_token.type) {
         Print("token 'fi' parsing via");
         hold_token = get_token();
@@ -366,11 +522,27 @@ void parse_while_stmt(){
   hold_token = get_token(); // skip while keyword
   parse_expression();
   hold_token = tokens[p_token];
+
+   // missing then keyword
+  if(TK_DO != hold_token.type){
+    handle_missing(ERROR_x06,hold_token.row,hold_token.col);
+    hold_token = get_token();
+    putback(tokens[p_token]);
+  }
+
   if (TK_DO == hold_token.type) {
     Print("token 'do' parsing via");
     hold_token = get_token(); // skip do keyword
     parse_stmt_list();
     hold_token = tokens[p_token];
+
+     // missing then keyword
+    if(TK_OD != hold_token.type){
+      handle_missing(ERROR_x05,hold_token.row,hold_token.col);
+      hold_token = get_token();
+      putback(tokens[p_token]);
+    }
+
     if (TK_OD == hold_token.type) {
       Print("token 'od' parsing via");
       // generate_instr_jmp(instr_start);
@@ -418,12 +590,20 @@ void parse_statement(){
 void parse_stmt_list(){
   parse_statement();
   Token_t hold_token = tokens[p_token];
-  // Print("token type ===== %d",hold_token.type);
+
+  // missing semi colon
+  if(TK_READ == hold_token.type || TK_WHILE == hold_token.type 
+  || TK_WRITE == hold_token.type || TK_IF == hold_token.type 
+  || TK_SKIP == hold_token.type || TK_IDENTIFIER == hold_token.type){
+    handle_missing(ERROR_x00,tokens[p_token-1].row,tokens[p_token-1].col);
+    hold_token = get_token();
+    putback(tokens[p_token]);
+  }
+
   if (TK_SEMI == hold_token.type) {
     match(hold_token, TK_SEMI);
     hold_token = get_token(); // skip ;
     parse_stmt_list();
-    // hold_token = get_token();
   } else {
       return;
   }
@@ -438,13 +618,29 @@ void parse_stmt_list(){
  */
 void parse_program(){
   Token_t hold_token = get_token();
-  if (TK_VAR == hold_token.type) {
-    parse_vardeclation();
+  parse_vardeclation();
+  hold_token = get_token();
+
+  if(TK_EOF == hold_token.type){
+    return;
+  }
+
+  // missing semi colon
+  if(TK_READ == hold_token.type || TK_WHILE == hold_token.type 
+  || TK_WRITE == hold_token.type || TK_IF == hold_token.type 
+  || TK_SKIP == hold_token.type || TK_IDENTIFIER == hold_token.type){
+    handle_missing(ERROR_x00,tokens[p_token-1].row,tokens[p_token-1].col);
     hold_token = get_token();
+    putback(tokens[p_token - 1]);
+  }
+
+  if (TK_SEMI == hold_token.type) {
+    // parse_vardeclation();
+    // hold_token = get_token();
     match(hold_token, TK_SEMI);
     parse_stmt_list();
   } else {
-    parse_stmt_list();
+    return;
   }
   // hold_token = get_token();
 }
