@@ -153,6 +153,16 @@ void parse_vardeclation(){
 |`ERROR_x21`|`expect a arithmetic operators such as '+','-','*','/'`|
 |`ERROR_x22`|`expect a relational operator such as '=' and '<'`|
 |`ERROR_x23`|`expect a decimial int number`|
+|`ERROR_x24`|`program aborted unexpectedly, exited with -1`|
+|`ERROR_x25`|`extra ';'`|
+|`ERROR_x26`|`extra ','`|
+|`ERROR_x27`|`extra (`|
+|`ERROR_x28`|`extra )`|
+|`ERROR_x29`|`there must be a variable inside the parentheses`|
+|`ERROR_x30`|`only one variable within the parentheses of a read expression`|
+|`ERROR_x31`|`operator is required between two identifiers`|
+|`ERROR_x32`|`operator is required between two num`|
+|`ERROR_x33`|`continuous operator`|
 
 此处的错误类型定义可能并未完全使用到，诸如`ERROR_x02`，是语义层面的错误，语法层面无法暂时未对此情况作出处理。最终的效果如下图所示：
 
