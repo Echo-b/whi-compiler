@@ -637,8 +637,6 @@ void parse_program(){
   }
 
   if (TK_SEMI == hold_token.type) {
-    // parse_vardeclation();
-    // hold_token = get_token();
     match(hold_token, TK_SEMI);
     parse_stmt_list();
   } else {
