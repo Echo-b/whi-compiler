@@ -328,6 +328,25 @@ void parse_subexpression_D(){
 void parse_skip_stmt(){
   Token_t hold_token = tokens[p_token];
   match(hold_token, TK_SKIP);
+
+  /**
+   * @brief 
+   * extra ;
+   * such as 
+   * if m = 2 then
+   *  skip;
+   * else
+   *  skip;
+   * fi
+   * so we need to look forward two tokens
+   */
+  if(TK_SEMI == tokens[p_token + 1].type){
+    if(TK_FI == tokens[p_token + 2].type || TK_OD == tokens[p_token + 2].type 
+    || TK_ELSE == tokens[p_token + 2].type){
+      handle_extra(ERROR_x25,hold_token.row,hold_token.col);
+    }
+  }
+   
   hold_token = get_token(); 
 }
 
@@ -485,6 +504,12 @@ void parse_if_stmt(){
     if (TK_ELSE == hold_token.type) {
       Print("token 'else' parsing via");
       hold_token = get_token(); // skip else keyword
+
+      // extra semi colon
+      if(TK_SEMI == tokens[p_token].type){
+        handle_extra(ERROR_x25,hold_token.row,hold_token.col);
+      }
+
       parse_stmt_list();
       hold_token = tokens[p_token];
 
@@ -603,9 +628,21 @@ void parse_stmt_list(){
   }
 
   if (TK_SEMI == hold_token.type) {
-    match(hold_token, TK_SEMI);
-    hold_token = get_token(); // skip ;
-    parse_stmt_list();
+
+    if(TK_EOF == tokens[p_token+1].type){
+      // putback(tokens[p_token+ 1]);
+      handle_extra(ERROR_x25,hold_token.row,hold_token.col);
+      return;
+    } 
+
+    // extra ;
+    if(TK_FI == tokens[p_token + 1].type || TK_OD == tokens[p_token + 1].type ){
+      handle_extra(ERROR_x25,hold_token.row,hold_token.col);
+    }else {
+      match(hold_token, TK_SEMI);
+      hold_token = get_token(); // skip ;  
+      parse_stmt_list();   
+    }
   } else {
       return;
   }
@@ -623,10 +660,6 @@ void parse_program(){
   parse_vardeclation();
   hold_token = get_token();
 
-  if(TK_EOF == hold_token.type){
-    return;
-  }
-
   // missing semi colon
   if(TK_READ == hold_token.type || TK_WHILE == hold_token.type 
   || TK_WRITE == hold_token.type || TK_IF == hold_token.type 
@@ -637,9 +670,9 @@ void parse_program(){
   }
 
   if (TK_SEMI == hold_token.type) {
-    match(hold_token, TK_SEMI);
-    parse_stmt_list();
-  } else {
+      match(hold_token, TK_SEMI);
+      parse_stmt_list();
+  } else if(TK_EOF == hold_token.type) {
     return;
   }
   // hold_token = get_token();
