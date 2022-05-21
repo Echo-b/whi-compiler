@@ -302,7 +302,8 @@ void parse_subexpression_D(){
 
     // extra )
     if(TK_RP == tokens[p_token + 1].type){
-      handle_extra(ERROR_x28,tokens[p_token].row,tokens[p_token].col);
+      if(left_parentheses_cnt != right_parentheses_cnt +1)
+        handle_extra(ERROR_x28,tokens[p_token].row,tokens[p_token].col);
     }
 
     break;
@@ -441,7 +442,8 @@ void parse_write_stmt(){
 
   // extra )
   if(TK_RP == tokens[p_token].type){
-    handle_extra(ERROR_x28,tokens[p_token].row,tokens[p_token].col);
+    if(right_parentheses_cnt + 1 != left_parentheses_cnt)
+      handle_extra(ERROR_x28,tokens[p_token].row,tokens[p_token].col);
   }
 
 }

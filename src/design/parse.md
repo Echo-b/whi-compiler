@@ -67,6 +67,51 @@ struct grammer_error{
 |赋值符号错误写成其他符号|`a = b`|
 |变量未声明，假设`b`未声明|`a := b`|
 
+#### 代码示例
+```c
+/**
+ * @brief 
+ * parse write statement and generate write instr
+ * write(E)
+ * nothing on successful
+ * call handle_error() function on failure 
+ */
+void parse_write_stmt(){
+  Token_t hold_token = get_token(); // get write keyword
+  match(hold_token,TK_WRITE);
+
+   // missing (
+  if(TK_LP != tokens[p_token].type){
+    handle_missing(ERROR_x08,tokens[p_token].row,tokens[p_token].col);
+  }
+
+  hold_token = get_token();
+  match(hold_token, TK_LP);
+
+  parse_expression();
+  // generate_instr_wrt();
+  hold_token = tokens[p_token];
+
+  // missing ) 
+  if(TK_RP != tokens[p_token].type){
+    handle_missing(ERROR_x09,tokens[p_token].row,tokens[p_token].col);
+    hold_token = get_token();
+    putback(tokens[p_token]);
+  }
+
+  match(hold_token, TK_RP);
+  hold_token = get_token(); 
+
+  // extra )
+  if(TK_RP == tokens[p_token].type){
+    if(right_parentheses_cnt + 1 != left_parentheses_cnt)
+      handle_extra(ERROR_x28,tokens[p_token].row,tokens[p_token].col);
+  }
+
+}
+```
+我们以`write(E)`的多错误处理为例来介绍我们的基本思想的实现。首先对于没有左括号的情况，我们需要在进入`parse_write_statement()` 函数就提前判断下一个`token`，如果不是`(`，那么证明我们缺失左括号，这时我们调用`handle_missing()`函数来在输入流中插入一个`(`括号，并调用`get_token()`获取这个`(`括号，另外我们还需要将超前读入的`identifier`或者其他标识符放回到`tokens`数组中，即调用`putback()`函数，而对于存在额外的`)`括号这一点，我们就需要考虑左右括号的数量关系，为此我们设立了两个变量`right_parentheses_cnt, left_parentheses_cnt`，他们只会在`match`函数中匹配到左右括号时自增，那么如果我们查看下一个`token`，发现它为右括号并且其加一的数量不等于左括号的数量，证明我们的右括号存在多余，此时我们就需要跳过多余的右括号，就调用`handle_extra()`函数，其在内部多调用一次`get_token()`。反之如果左右括号数量相等，我们不做处理。
+
 ### 识别条件的判断
 当读入一个`token`,需要判断要调用那一个子过程来进行识别，本质上就是对每一个非终结符求`FIRST`集，然后根据不同的符号，匹配进入不同的识别过程，下面是`WHI`语言的文法的非终结符的`FIRST`集
 

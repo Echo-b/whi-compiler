@@ -139,4 +139,7 @@ static int row = 1;
 
 static int instr_cnt = 0;
 
+static int left_parentheses_cnt = 0;
+static int right_parentheses_cnt = 0;
+
 #endif

@@ -106,6 +106,7 @@ int match(Token_t hold, int expected) {
     case TK_LP:
       if (hold.type == TK_LP) {
         Print("token '(' parsing via!");
+        ++left_parentheses_cnt;
         break;
       } else {
         handle_error(ERROR_x08,hold.row,hold.col);
@@ -114,6 +115,7 @@ int match(Token_t hold, int expected) {
     case TK_RP:
       if (hold.type == TK_RP) {
         Print("token ')' parsing via!");
+        ++right_parentheses_cnt;
         break;
       } else {
         handle_error(ERROR_x09,hold.row,hold.col);
