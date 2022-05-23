@@ -591,6 +591,7 @@ void parse_while_stmt(){
  */
 void parse_statement(){
   Token_t hold_token = tokens[p_token];
+  printf("p_token %d token type %d\n",p_token,hold_token.type);
   if (TK_SKIP == hold_token.type)
     parse_skip_stmt();
   else if (TK_IDENTIFIER == hold_token.type)
@@ -651,31 +652,35 @@ void parse_stmt_list(){
 /**
  * @brief 
  * parse program 
- * P ::= X[';'L]
+ * P ::= [X';'] L
  * nothing on successful
  * call handle_error() function on failure 
  */
 void parse_program(){
-  Token_t hold_token = get_token();
-  parse_vardeclation();
-  hold_token = get_token();
-
-  // missing semi colon
-  if(TK_READ == hold_token.type || TK_WHILE == hold_token.type 
-  || TK_WRITE == hold_token.type || TK_IF == hold_token.type 
-  || TK_SKIP == hold_token.type || TK_IDENTIFIER == hold_token.type){
-    handle_missing(ERROR_x00,tokens[p_token-1].row,tokens[p_token-1].col);
+  if(TK_VAR == tokens[p_token].type){
+    Token_t hold_token = get_token();
+    parse_vardeclation();
     hold_token = get_token();
-    putback(tokens[p_token - 1]);
-  }
 
-  if (TK_SEMI == hold_token.type) {
+    // missing semi colon
+    if(TK_READ == hold_token.type || TK_WHILE == hold_token.type 
+    || TK_WRITE == hold_token.type || TK_IF == hold_token.type 
+    || TK_SKIP == hold_token.type || TK_IDENTIFIER == hold_token.type){
+      handle_missing(ERROR_x00,tokens[p_token-1].row,tokens[p_token-1].col);
+      hold_token = get_token();
+      putback(tokens[p_token - 1]);
+    }
+
+    if (TK_SEMI == hold_token.type) {
       match(hold_token, TK_SEMI);
       parse_stmt_list();
-  } else if(TK_EOF == hold_token.type) {
-    return;
+    } else if(TK_EOF == hold_token.type) {
+      return;
+    }
+  }else {
+    parse_stmt_list();      
   }
-  // hold_token = get_token();
+  
 }
 
 /**
