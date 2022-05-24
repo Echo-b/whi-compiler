@@ -97,12 +97,12 @@ void generate_instr_jpc(int a) {
 }
 
 void generate_instr_sto(Token_t t) {
-  char instr[8] = {'\0'};
+  // char instr[8] = {'\0'};
   int ret = serchslot(t.str);
-  if (ret == -1) {
-    printf("%s undefined\n", t.str);
-    exit(-1);
-  }
+  // if (ret == -1) {
+  //   printf("%s undefined\n", t.str);
+  //   exit(-1);
+  // }
   // sprintf(instr, "sto %d\n", ret);
   // fprintf(ssam_out, "%s", instr);
   inst_array[instr_cnt].op = sto;
@@ -111,12 +111,12 @@ void generate_instr_sto(Token_t t) {
 }
 
 void generate_instr_lod(Token_t t) {
-  char instr[8] = {'\0'};
+  // char instr[8] = {'\0'};
   int ret = serchslot(t.str);
-  if (ret == -1) {
-    printf("%s undefined\n", t.str);
-    exit(-1);
-  }
+  // if (ret == -1) {
+  //   printf("%s undefined\n", t.str);
+  //   exit(-1);
+  // }
   // sprintf(instr, "lod %d\n", ret);
   // fprintf(ssam_out, "%s", instr);
   inst_array[instr_cnt].op = lod;
@@ -130,12 +130,12 @@ void generate_instr_var(Token_t t) {
 }
 
 void generate_instr_read(Token_t t) {
-  char instr[8] = {'\0'};
+  // char instr[8] = {'\0'};
   int ret = serchslot(t.str);
-  if (ret == -1) {
-    printf("%s undefined\n", t.str);
-    exit(-1);
-  }
+  // if (ret == -1) {
+  //   printf("%s undefined\n", t.str);
+  //   exit(-1);
+  // }
   // sprintf(instr, "red %d\n", ret);
   // fprintf(ssam_out, "%s", instr);
   inst_array[instr_cnt].op = red;

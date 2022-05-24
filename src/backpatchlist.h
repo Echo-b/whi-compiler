@@ -51,7 +51,9 @@ static int nextinst(){
 }
 
 struct backpatchlist *makelist(int next_inst_cnt);
-struct backpatchlist *merge(struct backpatchlist *l1, struct backpatchlist *l2);
-bool listfree(struct backpatchlist *l);
+struct backpatchlist *merge(struct backpatchlist *bpl1, struct backpatchlist *bpl2);
+bool backpatch(struct backpatchlist *bpl, int next_inst_cnt);
+int length(struct backpatchlist *bpl);
+bool listfree(struct backpatchlist *bpl);
 
 #endif
