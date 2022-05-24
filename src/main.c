@@ -11,7 +11,7 @@ int main(int argc, char* argv[]) {
 
   /* opening file for reading */
   fp = fopen(argv[1], "r");
-  // ssam_out = fopen("./inst_out/ssam.out", "a");
+  ssam_out = fopen("./inst_out/ssam.out", "a");
   if (fp == NULL) {
     perror("Error opening file");
     return (-1);
@@ -23,11 +23,11 @@ int main(int argc, char* argv[]) {
     init_token(str, &successful);
   }
   tokens[nr_token++].type = TK_EOF;
-  show_token();
+  // show_token();
   parse();
   show_systable();
   fclose(fp);
-  // fclose(ssam_out);
+  fclose(ssam_out);
 
   return (0);
 }

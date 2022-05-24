@@ -6,6 +6,7 @@
 #include "generate_instr.c"
 #include "helper.c"
 #include "color.h"
+#include "backpatchlist.c"
 
 /**
  * @brief 
@@ -15,10 +16,10 @@
  * call handle_error() function on unsuccessful 
  */
 void parse_vardeclation(){
-  // generate_instr_int(Gsyspos);
+  generate_instr_int(Gsyspos);
   Token_t hold_token = get_token(); // skip var keyword
   match(hold_token,TK_IDENTIFIER);
-  // generate_instr_var(hold_token);
+  generate_instr_var(hold_token);
 
   // missing comma 
   if(TK_IDENTIFIER == tokens[p_token].type){
@@ -37,7 +38,7 @@ void parse_vardeclation(){
 
       hold_token = get_token();
       match(hold_token, TK_IDENTIFIER);
-      // generate_instr_var(hold_token);
+      generate_instr_var(hold_token);
 
       // missing comma 
       if(TK_IDENTIFIER == tokens[p_token].type){
@@ -110,7 +111,7 @@ void parse_subexpression_TS(){
     }
 
     parse_subexpression_T();
-    // generate_instr_add();
+    generate_instr_add();
     hold_token = tokens[p_token];
     if(hold_token.type == TK_PLUS || hold_token.type == TK_MINUS){
       parse_subexpression_TS();
@@ -128,7 +129,7 @@ void parse_subexpression_TS(){
     }
 
     parse_subexpression_T();
-    // generate_instr_sub();
+    generate_instr_sub();
     hold_token = tokens[p_token];
     if(hold_token.type == TK_PLUS || hold_token.type == TK_MINUS){
       parse_subexpression_TS();
@@ -178,7 +179,7 @@ void parse_subexpression_FS(){
     }
 
     parse_subexpression_F();
-    // generate_instr_mul();
+    generate_instr_mul();
     hold_token = tokens[p_token];
     if(hold_token.type == TK_MUL || hold_token.type == TK_DIV){
       parse_subexpression_FS();
@@ -196,7 +197,7 @@ void parse_subexpression_FS(){
     }
 
     parse_subexpression_F();
-    // generate_instr_div();
+    generate_instr_div();
 
     hold_token = tokens[p_token];
     if(hold_token.type == TK_MUL || hold_token.type == TK_DIV){
@@ -234,10 +235,13 @@ void parse_subexpression_F(){
  * call handle_error() function on unsuccessful 
  */
 void parse_subexpression_D1(){
+  int gen_symbol_flag = 0;
   Token_t hold_token = tokens[p_token];
   if(hold_token.type == TK_EQ || hold_token.type == TK_LESS){
-    if(hold_token.type == TK_EQ)
+    if(hold_token.type == TK_EQ){
       Print("token '=' parsing via");
+      gen_symbol_flag = 1;
+    }
     else 
       Print("token '<' parsing via");
     hold_token = get_token(); // skip '=' or '<' token
@@ -249,7 +253,10 @@ void parse_subexpression_D1(){
 
     // may be more consideration
     parse_subexpression_D();
-    // generate_instr_equ();
+    if(gen_symbol_flag)
+      generate_instr_equ();
+    else
+      generate_instr_lth();
   }
   else
     handle_error(ERROR_x22,hold_token.row,hold_token.col);
@@ -266,8 +273,8 @@ void parse_subexpression_D(){
   switch (hold_token.type)
   {
   case TK_NUM:
-    // generate_instr_lit(atoi(hold_token.str));
     match(hold_token,TK_NUM);
+    generate_instr_lit(atoi(hold_token.str));
 
     // operator is required between two num
     if(TK_NUM == tokens[p_token + 1].type){
@@ -276,8 +283,8 @@ void parse_subexpression_D(){
 
     break;
   case TK_IDENTIFIER:
-    // generate_instr_lod(hold_token);
     match(hold_token,TK_IDENTIFIER);
+    generate_instr_lod(hold_token);
 
     // operator is required between two identifiers
     if(TK_IDENTIFIER == tokens[p_token + 1].type){
@@ -311,6 +318,10 @@ void parse_subexpression_D(){
     match(hold_token,TK_NOT);  
     hold_token = get_token(); // skip ~
     parse_expression();
+    // generate not instruction
+    generate_instr_lit(0);
+    generate_instr_equ();
+
     return;  // prevent call twice get_token() function
    default:
     handle_error(ERROR_x11,hold_token.row,hold_token.col);
@@ -370,7 +381,7 @@ void parse_assg_stmt(){
   hold_token = get_token();
   match(hold_token, TK_ASSIGN);
   parse_expression();
-  // generate_instr_sto(gen_token);
+  generate_instr_sto(gen_token);
 }
 
 /**
@@ -403,8 +414,8 @@ void parse_read_stmt(){
   }
 
   hold_token = get_token();
-  // generate_instr_read(hold_token);
   match(hold_token, TK_IDENTIFIER);
+  generate_instr_read(hold_token);
 
   // extra identifier in parentheses
   if(TK_IDENTIFIER == tokens[p_token].type){
@@ -446,7 +457,7 @@ void parse_write_stmt(){
   match(hold_token, TK_LP);
 
   parse_expression();
-  // generate_instr_wrt();
+  generate_instr_wrt();
   hold_token = tokens[p_token];
 
   // missing ) 
@@ -479,6 +490,7 @@ void parse_if_stmt(){
   match(hold_token,TK_IF);
   hold_token = get_token();  //skip if keyword
   parse_expression();
+  generate_instr_jpc(-1);
   hold_token = tokens[p_token];
 
   // missing then keyword
@@ -492,6 +504,9 @@ void parse_if_stmt(){
     Print("token 'then' parsing via");
     hold_token = get_token(); // skip then keyword
     parse_stmt_list();
+
+    generate_instr_jmp(-1);
+
     hold_token = tokens[p_token];
 
     // missing else keyword
@@ -543,11 +558,15 @@ void parse_if_stmt(){
  */
 void parse_while_stmt(){
   // printf(BLUE"the instr_cnt is %d"NONE,instr_cnt);
-  // int instr_start = instr_cnt;
   Token_t hold_token = tokens[p_token];
   match(hold_token,TK_WHILE);
   hold_token = get_token(); // skip while keyword
+  int instr_start = nextinst();
   parse_expression();
+
+  struct bachpatchlist *bpl = makelist(nextinst());
+  generate_instr_jpc(-1);
+
   hold_token = tokens[p_token];
 
    // missing then keyword
@@ -561,6 +580,10 @@ void parse_while_stmt(){
     Print("token 'do' parsing via");
     hold_token = get_token(); // skip do keyword
     parse_stmt_list();
+
+    generate_instr_jmp(instr_start);
+    backpatch(bpl, instr_cnt);
+
     hold_token = tokens[p_token];
 
      // missing then keyword
@@ -591,7 +614,6 @@ void parse_while_stmt(){
  */
 void parse_statement(){
   Token_t hold_token = tokens[p_token];
-  printf("p_token %d token type %d\n",p_token,hold_token.type);
   if (TK_SKIP == hold_token.type)
     parse_skip_stmt();
   else if (TK_IDENTIFIER == hold_token.type)
@@ -694,6 +716,7 @@ int parse(){
   parse_program();
   if(tokens[p_token].type == TK_EOF && !parse_flag){
     printf(GREEN"[success] parse over, congratulations!!!\n"NONE);
+    out_ssam_code();
     return 0;
   }else {
     handle_error(ERROR_x24,tokens[p_token].row,tokens[p_token].col);

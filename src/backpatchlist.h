@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "color.h"
 
 struct backpatchlist
 {
@@ -13,24 +14,26 @@ struct backpatchlist
 
 #define nullptr NULL
 
+extern FILE* ssam_out;
+
 //instruction data structure definition
 enum func_code {
-  add,
-  sub,
-  mul,
-  div,
-  equ,
-  lth,
-  lit,
-  sto,
-  lod,
-  Int,
-  jmp,
-  jpc,
-  red,
-  wrt,
-  swp,
-  nop,
+  _add,
+  _sub,
+  _mul,
+  _div,
+  _equ,
+  _lth,
+  _lit,
+  _sto,
+  _lod,
+  _int,
+  _jmp,
+  _jpc,
+  _red,
+  _wrt,
+  _swp,
+  _nop,
 };
 
 struct instruction {
@@ -55,5 +58,6 @@ struct backpatchlist *merge(struct backpatchlist *bpl1, struct backpatchlist *bp
 bool backpatch(struct backpatchlist *bpl, int next_inst_cnt);
 int length(struct backpatchlist *bpl);
 bool listfree(struct backpatchlist *bpl);
+bool out_ssam_code();
 
 #endif

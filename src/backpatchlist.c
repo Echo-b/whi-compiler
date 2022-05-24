@@ -1,5 +1,4 @@
 #include "backpatchlist.h"
-#include "color.h"
 
 /**
  * @brief 
@@ -89,5 +88,73 @@ bool listfree(struct backpatchlist *bpl){
   bpl->next = nullptr;
   bpl->tail = nullptr;
   printf(GREEN"list is free successful\n"NONE);
+  return true;
+}
+
+/**
+ * @brief 
+ * 
+ * @return true 
+ * @return false 
+ */
+bool out_ssam_code(){
+  char instr[8] = {'\0'};
+  for(int i = 0; i < instr_cnt; ++i){
+    switch (inst_array[i].op)
+    {
+    case _add:
+      sprintf(instr, "add\n");
+      break;
+    case _sub:
+      sprintf(instr, "sub\n");
+      break;
+    case _mul:
+      sprintf(instr, "mul\n");
+      break;
+    case _div:
+      sprintf(instr, "div\n");
+      break;
+    case _equ:
+      sprintf(instr, "equ\n");
+      break;
+    case _lth:
+      sprintf(instr, "lth\n");
+      break;
+    case _wrt:
+      sprintf(instr, "wrt\n");
+      break;
+    case _swp:
+      sprintf(instr, "swp\n");
+      break;
+    case _nop:
+      sprintf(instr, "nop\n");
+      break;
+    case _lit:
+      sprintf(instr, "lit  %d\n" ,inst_array[i].a);
+      break;
+    case _sto:
+      sprintf(instr, "sto  %d\n" ,inst_array[i].a);
+      break;
+    case _lod:
+      sprintf(instr, "lod  %d\n" ,inst_array[i].a);
+      break;
+    case _int:
+      sprintf(instr, "int  %d\n" ,inst_array[i].a);
+      break;
+    case _jmp:
+      sprintf(instr, "jmp  %d\n" ,inst_array[i].a);
+      break;
+    case _jpc:
+      sprintf(instr, "jpc  %d\n" ,inst_array[i].a);
+      break;
+    case _red:
+      sprintf(instr, "red  %d\n" ,inst_array[i].a);
+      break;
+    default:
+      break;
+    }
+    fprintf(ssam_out, "%s", instr);
+  }
+  printf(GREEN"[success] generate simple stack machine code successful!\n"NONE);
   return true;
 }
