@@ -6,7 +6,6 @@
 #include "generate_instr.c"
 #include "helper.c"
 #include "color.h"
-#include "backpatchlist.c"
 
 /**
  * @brief 
@@ -484,13 +483,19 @@ void parse_write_stmt(){
  * if E then L else L fi
  * nothing on successful
  * call handle_error() function on failure 
+ * @return struct backpatchlist* 
  */
-void parse_if_stmt(){
+
+struct backpatchlist *parse_if_stmt(){
+  struct backpatchlist *lst;
   Token_t hold_token = tokens[p_token];
   match(hold_token,TK_IF);
   hold_token = get_token();  //skip if keyword
   parse_expression();
-  generate_instr_jpc(-1);
+  // generate_instr_jpc(-1);
+
+  struct backpatchlist *la = brf();
+
   hold_token = tokens[p_token];
 
   // missing then keyword
@@ -503,9 +508,10 @@ void parse_if_stmt(){
   if (TK_THEN == hold_token.type) {
     Print("token 'then' parsing via");
     hold_token = get_token(); // skip then keyword
-    parse_stmt_list();
 
-    generate_instr_jmp(-1);
+    struct backpatchlist *lst1 = parse_stmt_list();
+    struct backpatchlist *lb = br();   // @br
+    // generate_instr_jmp(-1);
 
     hold_token = tokens[p_token];
 
@@ -520,12 +526,15 @@ void parse_if_stmt(){
       Print("token 'else' parsing via");
       hold_token = get_token(); // skip else keyword
 
+      backpatch(la, nextinst());  // @patch
+
       // extra semi colon
       if(TK_SEMI == tokens[p_token].type){
         handle_extra(ERROR_x25,hold_token.row,hold_token.col);
       }
 
-      parse_stmt_list();
+      struct backpatchlist *lst2 = parse_stmt_list();
+
       hold_token = tokens[p_token];
 
       // missing fi keyword
@@ -538,6 +547,8 @@ void parse_if_stmt(){
       if (TK_FI == hold_token.type) {
         Print("token 'fi' parsing via");
         hold_token = get_token();
+        lst = endif(lb, lst1, lst2);
+        
       } else {
         handle_error(ERROR_x07,hold_token.row,hold_token.col);  // lack fi
       }
@@ -547,6 +558,7 @@ void parse_if_stmt(){
   } else {
     handle_error(ERROR_x13,hold_token.row,hold_token.col);  // lack then
   }
+  return lst;
 }
 
 /**
@@ -555,17 +567,20 @@ void parse_if_stmt(){
  * while E do L od
  * nothing on successful
  * call handle_error() function on failure 
+ * @return struct backpatchlist* 
  */
-void parse_while_stmt(){
+struct backpatchlist *parse_while_stmt(){
   // printf(BLUE"the instr_cnt is %d"NONE,instr_cnt);
   Token_t hold_token = tokens[p_token];
   match(hold_token,TK_WHILE);
   hold_token = get_token(); // skip while keyword
-  int instr_start = nextinst();
+
+  int instr_start = nextinst();   // @ini
+
   parse_expression();
 
-  struct bachpatchlist *bpl = makelist(nextinst());
-  generate_instr_jpc(-1);
+  struct backpatchlist *la = brf(); // @brf
+  // generate_instr_jpc(-1);
 
   hold_token = tokens[p_token];
 
@@ -579,10 +594,11 @@ void parse_while_stmt(){
   if (TK_DO == hold_token.type) {
     Print("token 'do' parsing via");
     hold_token = get_token(); // skip do keyword
-    parse_stmt_list();
+    struct backpatchlist *lst = parse_stmt_list();
 
-    generate_instr_jmp(instr_start);
-    backpatch(bpl, instr_cnt);
+    generate_instr_jmp(instr_start);   // @br
+
+    backpatch(lst, instr_start);  // @patch
 
     hold_token = tokens[p_token];
 
@@ -604,6 +620,7 @@ void parse_while_stmt(){
   } else {
     handle_error(ERROR_x06,hold_token.row,hold_token.col); // lack do
   }
+  return la;
 }
 
 /**
@@ -611,23 +628,25 @@ void parse_while_stmt(){
  * parse statement 
  * nothing on successful
  * call handle_error() function on failure 
+ * @return struct backpatchlist* 
  */
-void parse_statement(){
+struct backpatchlist *parse_statement(){
   Token_t hold_token = tokens[p_token];
   if (TK_SKIP == hold_token.type)
     parse_skip_stmt();
   else if (TK_IDENTIFIER == hold_token.type)
     parse_assg_stmt();
   else if (TK_IF == hold_token.type)
-    parse_if_stmt();
+    return parse_if_stmt();
   else if (TK_WHILE == hold_token.type)
-    parse_while_stmt();
+    return parse_while_stmt();
   else if (TK_READ == hold_token.type)
     parse_read_stmt();
   else if (TK_WRITE == hold_token.type)
     parse_write_stmt();
   else
     handle_error(ERROR_x11,hold_token.row,hold_token.col);
+  return nullptr;
 }
 
 /**
@@ -636,9 +655,11 @@ void parse_statement(){
  * parse statement list
  * nothing on successful
  * call handle_error() function on failure 
+ * @return struct backpatchlist* 
  */
-void parse_stmt_list(){
-  parse_statement();
+struct backpatchlist *parse_stmt_list(){
+  struct backpatchlist *bpl = parse_statement();
+  struct backpatchlist * bpl1;
   Token_t hold_token = tokens[p_token];
 
   // missing semi colon
@@ -655,7 +676,7 @@ void parse_stmt_list(){
     if(TK_EOF == tokens[p_token+1].type){
       // putback(tokens[p_token+ 1]);
       handle_extra(ERROR_x25,hold_token.row,hold_token.col);
-      return;
+      return nullptr;
     } 
 
     // extra ;
@@ -664,11 +685,14 @@ void parse_stmt_list(){
     }else {
       match(hold_token, TK_SEMI);
       hold_token = get_token(); // skip ;  
-      parse_stmt_list();   
+
+      backpatch(bpl, nextinst());
+      bpl1 = parse_stmt_list();   
     }
   } else {
-      return;
+      return bpl;
   }
+  return bpl1;
 }
 
 /**
@@ -695,12 +719,14 @@ void parse_program(){
 
     if (TK_SEMI == hold_token.type) {
       match(hold_token, TK_SEMI);
-      parse_stmt_list();
+      struct backpatchlist *lst1 = parse_stmt_list();
+      backpatch(lst1, nextinst());
     } else if(TK_EOF == hold_token.type) {
       return;
     }
   }else {
-    parse_stmt_list();      
+    struct backpatchlist *lst2 = parse_stmt_list();   
+    backpatch(lst2, nextinst());   
   }
   
 }
@@ -716,7 +742,7 @@ int parse(){
   parse_program();
   if(tokens[p_token].type == TK_EOF && !parse_flag){
     printf(GREEN"[success] parse over, congratulations!!!\n"NONE);
-    out_ssam_code();
+    out_ssam_code(ssam_out);
     return 0;
   }else {
     handle_error(ERROR_x24,tokens[p_token].row,tokens[p_token].col);

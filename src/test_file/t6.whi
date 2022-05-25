@@ -1,7 +1,7 @@
 var sum, i;
 sum := 0;
-i := 0;
-while (i < 100) do
+i := 1;
+while (i < 51) do
   sum := sum + i;
   i := i + 1
 od;

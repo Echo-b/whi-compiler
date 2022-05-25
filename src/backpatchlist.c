@@ -1,4 +1,8 @@
 #include "backpatchlist.h"
+// #include "generate_instr.c"
+
+extern void generate_instr_jmp(int a);
+extern void generate_instr_jpc(int a);
 
 /**
  * @brief 
@@ -26,8 +30,17 @@ struct backpatchlist *makelist(int next_inst_cnt){
  * @return struct backpatchlist* 
  */
 struct backpatchlist *merge(struct backpatchlist *bpl1, struct backpatchlist *bpl2){
-  bpl1->tail = bpl2;
-  return bpl1;
+  if(nullptr == bpl1 && nullptr == bpl2){
+    return nullptr;
+  } else if(nullptr == bpl1 && nullptr != bpl2){
+    return bpl2;
+  } else if(nullptr != bpl1 && nullptr == bpl2){
+    return bpl1;
+  } else{
+    bpl1->tail->next = bpl2;
+    bpl1->tail = bpl2->tail;
+    return bpl1;
+  }
 }
 
 /**
@@ -40,7 +53,7 @@ struct backpatchlist *merge(struct backpatchlist *bpl1, struct backpatchlist *bp
  */
 bool backpatch(struct backpatchlist *bpl, int next_inst_cnt){
   if(!bpl){
-    printf(RED"back patch list is null!\n"NONE);
+    printf(GREEN"the bpl is null ,no operate return\n"NONE);
     return false;
   }
   struct backpatchlist *tmp = bpl;
@@ -61,7 +74,7 @@ bool backpatch(struct backpatchlist *bpl, int next_inst_cnt){
  */
 int length(struct backpatchlist *bpl){
   struct backpatchlist *tmp = bpl;
-  if(!tmp){
+  if(!bpl){
     return 0;
   }
   int len = 0;
@@ -94,10 +107,74 @@ bool listfree(struct backpatchlist *bpl){
 /**
  * @brief 
  * 
+ * @return struct backpatchlist* 
+ */
+struct  backpatchlist *brf(){
+  struct  backpatchlist *la = makelist(nextinst());
+  if(!la){
+    printf(RED"malloc memory failed!"NONE);
+    return  nullptr ;
+  }
+  generate_instr_jpc(-1);
+  return la;
+}
+
+/**
+ * @brief 
+ * 
+ * @return struct backpatchlist* 
+ */
+struct  backpatchlist *br(){
+  struct  backpatchlist *lb = makelist(nextinst());
+  if(!lb){
+    printf(RED"malloc memory failed!"NONE);
+    return  nullptr;
+  }
+  generate_instr_jmp(-1);
+  return lb;
+}
+
+/**
+ * @brief 
+ * 
+ * @param lb 
+ * @param lst1 
+ * @param lst2 
+ * @return struct backpatchlist* 
+ */
+struct  backpatchlist *endif(struct backpatchlist *lb ,struct backpatchlist *lst1 ,struct backpatchlist *lst2){
+  struct backpatchlist *lst = merge(merge(lst1,lb) ,lst2);
+  if(!lst){
+    printf(RED"call endif failed!"NONE);
+    return  nullptr;
+  }
+  return lst;
+}
+
+/**
+ * @brief 
+ * 
+ * @param bpl 
+ */
+void printbpl(struct backpatchlist *bpl){
+  if(!bpl){
+    printf(GREEN"list is null\n"NONE);
+    return;
+  }
+  struct backpatchlist *tmp = bpl;
+  while(tmp){
+    printf("the instr cnt is %d\n",tmp->inst_remain);
+    tmp = tmp->next;
+  }
+}
+
+/**
+ * @brief 
+ * 
  * @return true 
  * @return false 
  */
-bool out_ssam_code(){
+bool out_ssam_code(FILE* fd){
   char instr[8] = {'\0'};
   for(int i = 0; i < instr_cnt; ++i){
     switch (inst_array[i].op)
@@ -153,7 +230,7 @@ bool out_ssam_code(){
     default:
       break;
     }
-    fprintf(ssam_out, "%s", instr);
+    fprintf(fd, "%s", instr);
   }
   printf(GREEN"[success] generate simple stack machine code successful!\n"NONE);
   return true;
