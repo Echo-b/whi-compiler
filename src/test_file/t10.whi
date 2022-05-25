@@ -1,9 +1,10 @@
 var x, y, z;
-read(x);
-read(y);
+x := 5;
+y := 9;
 if x < y then
   z := y
 else
   z := x
 fi;
-write(z)
+write(z);
+write(1)

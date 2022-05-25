@@ -1,5 +1,6 @@
 var a, b, res;
-read(a);
-read(b);
+a := (5-10);
+b := 8;
 res := (a < b) * b + (~(a < b)) * a;
-write(res)
+write(res);
+write(0)

@@ -1,8 +1,8 @@
 var head, foot, cock, rabbit, n;
 
 n := 0;
-read (head);
-read (foot);
+head := 8;
+foot := 24;
 cock := 1;
 while (cock < head) + (cock = head) do
   rabbit := head - cock;

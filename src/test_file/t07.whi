@@ -1,6 +1,6 @@
 var x, y,z,x0,y0;
-read(x0);
-read(y0);
+x0 := 4;
+y0 := 2;
 x := x0;
 y := y0;
 z := 1;

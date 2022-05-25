@@ -1,7 +1,7 @@
 var x0, y0, x, y, g, m, temp;
 
-read(x);
-read(y);
+x := 32;
+y := 65;
 x0 := x; 
 y0 := y; 
 x := x-x/y*y;

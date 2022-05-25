@@ -1,7 +1,7 @@
-
 var m, a, b, res;
-read(m);
+m := (5-10);
 a := (m < 0) * (0 - m);
 b := (~(m < 0)) * m;
 res := a + b;
-write(res)
+write(res);
+write(1)

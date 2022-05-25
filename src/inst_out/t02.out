@@ -13,8 +13,10 @@ lit  0
 sto  5
 lit  0
 sto  6
-red  2
-red  3
+lit  12
+sto  2
+lit  4
+sto  3
 lod  2
 sto  0
 lod  3
@@ -32,7 +34,7 @@ lit  0
 equ
 lit  0
 equ
-jpc  50
+jpc  52
 lod  2
 sto  6
 lod  3
@@ -47,7 +49,7 @@ lod  3
 mul
 sub
 sto  2
-jmp  29
+jmp  31
 lod  3
 sto  4
 lod  0

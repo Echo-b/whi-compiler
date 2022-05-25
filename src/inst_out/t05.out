@@ -3,22 +3,25 @@ lit  0
 sto  0
 lit  0
 sto  1
-red  0
+lit  15
+sto  0
 lod  0
 lit  20
 lth
-jpc  20
+jpc  21
 lod  0
 lit  10
 lth
-jpc  17
+jpc  18
 lit  3
 sto  1
-jmp  22
+jmp  23
 lit  2
 sto  1
-jmp  22
+jmp  23
 lit  1
 sto  1
 lod  1
+wrt
+lit  0
 wrt

@@ -11,8 +11,10 @@ lit  0
 sto  4
 lit  0
 sto  4
-red  0
-red  1
+lit  8
+sto  0
+lit  24
+sto  1
 lit  1
 sto  2
 lod  2
@@ -22,7 +24,7 @@ lod  2
 lod  0
 equ
 add
-jpc  53
+jpc  55
 lod  0
 lod  2
 sub
@@ -36,7 +38,7 @@ mul
 add
 lod  1
 equ
-jpc  48
+jpc  50
 lod  2
 wrt
 lod  3
@@ -45,17 +47,17 @@ lod  4
 lit  1
 add
 sto  4
-jmp  48
+jmp  50
 lod  2
 lit  1
 add
 sto  2
-jmp  17
+jmp  19
 lod  4
 lit  0
 equ
-jpc  60
+jpc  62
 lit  0
 wrt
-jmp  60
+jmp  62
 nop

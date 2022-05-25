@@ -5,8 +5,12 @@ lit  0
 sto  1
 lit  0
 sto  2
-red  0
-red  1
+lit  5
+lit  10
+sub
+sto  0
+lit  8
+sto  1
 lod  0
 lod  1
 lth
@@ -22,4 +26,6 @@ mul
 add
 sto  2
 lod  2
+wrt
+lit  0
 wrt

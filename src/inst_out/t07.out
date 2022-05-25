@@ -9,8 +9,10 @@ lit  0
 sto  3
 lit  0
 sto  4
-red  3
-red  4
+lit  4
+sto  3
+lit  2
+sto  4
 lod  3
 sto  0
 lod  4

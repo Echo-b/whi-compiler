@@ -5,16 +5,20 @@ lit  0
 sto  1
 lit  0
 sto  2
-red  0
-red  1
+lit  5
+sto  0
+lit  9
+sto  1
 lod  0
 lod  1
 lth
-jpc  16
+jpc  18
 lod  1
 sto  2
-jmp  18
+jmp  20
 lod  0
 sto  2
 lod  2
+wrt
+lit  1
 wrt

@@ -22,3 +22,5 @@ sto  1
 jmp  9
 lod  0
 wrt
+lit  0
+wrt

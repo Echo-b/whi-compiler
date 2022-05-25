@@ -5,4 +5,5 @@ while (i < 51) do
   sum := sum + i;
   i := i + 1
 od;
-write(sum)
+write(sum);
+write(0)

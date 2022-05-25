@@ -1,4 +1,5 @@
 while (3 = 0) do
   skip
 od;
-write(6+3)
+write(6+3);
+write((5-9))
