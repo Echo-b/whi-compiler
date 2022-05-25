@@ -100,13 +100,22 @@ write(x2)
 
 ### 运行
 
+#### 生成测试集
 ```
 cd ~/Work
 git clone git@github.com:Echo-b/minimalist-compiler.git
 cd src
-./run.sh ./test_file/input0.txt  
+./run.sh 
 ```
-其中测试文件可以自行指定，具体可查看`test_file`文件夹下文件
+它会读取`test_file`文件夹下的测试文件`*.whi`，然后依次执行编译的过程，生成简单栈式抽象机代码`*.out`。
+
+#### 检验测试集
+```
+cd ./abstract_machine
+./run.sh
+```
+如果出现以下结果，说明测试通过
+![code_test](./asserts/code_test.png)
 
 ### LICENSE
 本项目使用 MIT License 协议
