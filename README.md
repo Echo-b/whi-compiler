@@ -117,5 +117,17 @@ cd ./abstract_machine
 如果出现以下结果，说明测试通过
 ![code_test](./asserts/code_test.png)
 
+也可以通过以下方式指定输入输出文件来生成`.out`文件
+```
+make clean
+make
+./wcc [inputfilename] [outputfilename]
+```
+
+然后使用以下命令运行
+```
+../abstract_machine/machine [outputfilename]
+```
+
 ### LICENSE
 本项目使用 MIT License 协议

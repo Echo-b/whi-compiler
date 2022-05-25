@@ -1,5 +1,5 @@
-lexicial:main.c
-		cc  main.c -o lexicial
+wcc:main.c
+		cc  main.c -o wcc
 
 clean:
-		rm -rf lexicial
+		rm -rf wcc
