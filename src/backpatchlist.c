@@ -1,5 +1,4 @@
 #include "backpatchlist.h"
-// #include "generate_instr.c"
 
 extern void generate_instr_jmp(int a);
 extern void generate_instr_jpc(int a);
@@ -235,3 +234,4 @@ bool out_ssam_code(FILE* fd){
   printf(GREEN"[success] generate simple stack machine code successful!\n"NONE);
   return true;
 }
+

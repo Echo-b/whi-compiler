@@ -1,4 +1,3 @@
-
 var a, b, res;
 read(a);
 read(b);

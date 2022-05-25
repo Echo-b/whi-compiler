@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "color.h"
-// #include "generate_instr.c"
 
 struct backpatchlist
 {
@@ -14,8 +13,6 @@ struct backpatchlist
 };
 
 #define nullptr NULL
-
-// extern FILE* ssam_out;
 
 //instruction data structure definition
 enum func_code {

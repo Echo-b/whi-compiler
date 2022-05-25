@@ -1,0 +1,24 @@
+int  2
+lit  0
+sto  0
+lit  0
+sto  1
+lit  0
+sto  0
+lit  1
+sto  1
+lod  1
+lit  51
+lth
+jpc  22
+lod  0
+lod  1
+add
+sto  0
+lod  1
+lit  1
+add
+sto  1
+jmp  9
+lod  0
+wrt

@@ -21,6 +21,6 @@ struct backpatchlist *parse_while_stmt();
 struct backpatchlist *parse_statement();
 struct backpatchlist *parse_stmt_list();
 void parse_program();
-int parse();
+int parse(FILE *out);
 
 #endif

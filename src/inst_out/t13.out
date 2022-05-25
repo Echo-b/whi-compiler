@@ -1,0 +1,9 @@
+lit  3
+lit  0
+equ
+jpc  5
+jmp  0
+lit  6
+lit  3
+add
+wrt

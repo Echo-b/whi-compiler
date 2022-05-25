@@ -131,8 +131,6 @@ static int parse_flag = 0;
 
 static Token_t put_token = {-1, " ", -1,-1,-1};
 
-static FILE* ssam_out;
-
 static int add_gsyt_flag = 0;
 
 static int row = 1;

@@ -720,13 +720,19 @@ void parse_program(){
     if (TK_SEMI == hold_token.type) {
       match(hold_token, TK_SEMI);
       struct backpatchlist *lst1 = parse_stmt_list();
-      backpatch(lst1, nextinst());
+      if(length(lst1) > 0){
+        backpatch(lst1, nextinst());
+        generate_instr_nop();
+      }
     } else if(TK_EOF == hold_token.type) {
       return;
     }
   }else {
     struct backpatchlist *lst2 = parse_stmt_list();   
-    backpatch(lst2, nextinst());   
+    if(length(lst2) > 0){
+      backpatch(lst2, nextinst());
+      generate_instr_nop();   
+    }
   }
   
 }
@@ -738,11 +744,11 @@ void parse_program(){
  * return -1 on failure
  * @return int 
  */
-int parse(){
+int parse(FILE *out){
   parse_program();
   if(tokens[p_token].type == TK_EOF && !parse_flag){
     printf(GREEN"[success] parse over, congratulations!!!\n"NONE);
-    out_ssam_code(ssam_out);
+    out_ssam_code(out);
     return 0;
   }else {
     handle_error(ERROR_x24,tokens[p_token].row,tokens[p_token].col);

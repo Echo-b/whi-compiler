@@ -1,4 +1,3 @@
-
 var x0, y0, x, y, g, m, temp;
 
 read(x);

@@ -1,0 +1,54 @@
+int  4
+lit  0
+sto  0
+lit  0
+sto  1
+lit  0
+sto  2
+lit  0
+sto  3
+red  0
+lod  0
+lit  1
+lth
+lod  0
+lit  1
+equ
+add
+jpc  21
+lit  0
+sto  3
+jmp  52
+lit  1
+sto  3
+lod  0
+lit  2
+equ
+jpc  28
+jmp  52
+lit  2
+sto  2
+lod  2
+lod  0
+lth
+jpc  52
+lod  0
+lod  0
+lod  2
+div
+lod  2
+mul
+sub
+lit  0
+equ
+jpc  47
+lit  0
+sto  3
+jmp  47
+lod  2
+lit  1
+add
+sto  2
+jmp  30
+lod  3
+wrt

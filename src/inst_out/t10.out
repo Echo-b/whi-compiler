@@ -1,0 +1,20 @@
+int  3
+lit  0
+sto  0
+lit  0
+sto  1
+lit  0
+sto  2
+red  0
+red  1
+lod  0
+lod  1
+lth
+jpc  16
+lod  1
+sto  2
+jmp  18
+lod  0
+sto  2
+lod  2
+wrt

@@ -1,0 +1,35 @@
+int  5
+lit  0
+sto  0
+lit  0
+sto  1
+lit  0
+sto  2
+lit  0
+sto  3
+lit  0
+sto  4
+red  3
+red  4
+lod  3
+sto  0
+lod  4
+sto  1
+lit  1
+sto  2
+lod  0
+lod  0
+lod  1
+div
+lod  1
+mul
+sub
+sto  0
+lod  0
+lod  2
+sub
+sto  1
+lod  0
+wrt
+lod  1
+wrt
