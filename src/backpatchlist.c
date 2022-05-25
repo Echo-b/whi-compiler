@@ -30,11 +30,11 @@ struct backpatchlist *makelist(int next_inst_cnt){
  * @return struct backpatchlist* 
  */
 struct backpatchlist *merge(struct backpatchlist *bpl1, struct backpatchlist *bpl2){
-  if(nullptr == bpl1 && nullptr == bpl2){
+  if(!bpl1 && !bpl2){
     return nullptr;
-  } else if(nullptr == bpl1 && nullptr != bpl2){
+  } else if(!bpl1 && bpl2){
     return bpl2;
-  } else if(nullptr != bpl1 && nullptr == bpl2){
+  } else if(bpl1 && !bpl2){
     return bpl1;
   } else{
     bpl1->tail->next = bpl2;
