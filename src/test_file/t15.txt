@@ -1,7 +1,7 @@
 var a,b,c,tmp, sqrt;
-a := 1;
-b := 5;
-c := 6;
+read(a);
+read(b);
+read(c);
 sqrt := 1;
 if (a = 0) then
   write(0 - c/b)

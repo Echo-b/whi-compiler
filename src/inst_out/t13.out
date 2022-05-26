@@ -1,13 +1,71 @@
-lit  3
+int  4
+lit  0
+sto  0
+lit  0
+sto  1
+lit  0
+sto  2
+lit  0
+sto  3
+lit  0
+sto  3
+lit  0
+sto  2
+lit  0
+sto  1
+lit  978
+sto  0
+lod  0
+lit  99
+lth
 lit  0
 equ
-jpc  5
-jmp  0
-lit  6
-lit  3
-add
-wrt
-lit  5
-lit  9
+jpc  46
+lod  0
+lit  100
+div
+sto  3
+lod  0
+lit  10
+div
+lod  3
+lit  10
+mul
 sub
+sto  2
+lod  0
+lod  3
+lit  100
+mul
+sub
+lod  2
+lit  10
+mul
+sub
+sto  1
+jmp  65
+lod  0
+lit  9
+lth
+lit  0
+equ
+jpc  63
+lod  0
+lit  10
+div
+sto  2
+lod  0
+lod  2
+lit  10
+mul
+sub
+sto  1
+jmp  65
+lod  0
+sto  1
+lod  3
+wrt
+lod  2
+wrt
+lod  1
 wrt

@@ -8,7 +8,7 @@ sto  0
 lit  1
 sto  1
 lod  1
-lit  51
+lit  101
 lth
 jpc  22
 lod  0

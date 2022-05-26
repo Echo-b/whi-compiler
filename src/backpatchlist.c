@@ -174,7 +174,7 @@ void printbpl(struct backpatchlist *bpl){
  * @return false 
  */
 bool out_ssam_code(FILE* fd){
-  char instr[8] = {'\0'};
+  char instr[32] = {'\0'};
   for(int i = 0; i < instr_cnt; ++i){
     switch (inst_array[i].op)
     {

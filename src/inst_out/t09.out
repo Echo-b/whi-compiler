@@ -1,4 +1,4 @@
-int  7
+int  5
 lit  0
 sto  0
 lit  0
@@ -9,56 +9,48 @@ lit  0
 sto  3
 lit  0
 sto  4
-lit  0
-sto  5
-lit  0
-sto  6
-lit  32
-sto  2
-lit  65
-sto  3
-lod  2
+lit  3
 sto  0
-lod  3
+lit  4
 sto  1
+lit  5
+sto  2
+lod  0
+lod  1
+add
 lod  2
-lod  2
-lod  3
+add
+lit  2
 div
+sto  4
+lod  4
+lod  4
+lod  0
+sub
+mul
+lod  4
+lod  1
+sub
+mul
+lod  4
+lod  2
+sub
+mul
+sto  4
+lod  3
 lod  3
 mul
-sub
-sto  2
-lod  2
-lit  0
+lod  4
 equ
 lit  0
 equ
 jpc  52
-lod  2
-sto  6
 lod  3
-sto  2
-lod  6
+lit  1
+add
 sto  3
-lod  2
-lod  2
+jmp  39
 lod  3
-div
-lod  3
-mul
-sub
-sto  2
-jmp  31
-lod  3
-sto  4
-lod  0
-lod  1
-mul
-lod  4
-div
-sto  5
-lod  4
 wrt
-lod  5
+lit  1
 wrt

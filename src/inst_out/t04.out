@@ -1,4 +1,94 @@
+int  5
+lit  0
+sto  0
+lit  0
+sto  1
+lit  0
+sto  2
+lit  0
+sto  3
+lit  0
+sto  4
 lit  1
-wrt
+sto  0
+lit  5
+sto  1
+lit  6
+sto  2
 lit  1
+sto  4
+lod  0
+lit  0
+equ
+jpc  30
+lit  0
+lod  2
+lod  1
+div
+sub
 wrt
+jmp  93
+lod  1
+lod  1
+mul
+lit  4
+lod  0
+mul
+lod  2
+mul
+sub
+sto  3
+lod  3
+lit  0
+lth
+jpc  47
+lit  0
+wrt
+jmp  93
+lod  3
+lit  0
+equ
+jpc  60
+lit  0
+lod  1
+sub
+lit  2
+div
+lod  0
+mul
+wrt
+jmp  93
+lod  4
+lod  4
+mul
+lod  3
+equ
+lit  0
+equ
+jpc  73
+lod  4
+lit  1
+add
+sto  4
+jmp  60
+lit  0
+lod  1
+sub
+lod  4
+add
+lit  2
+div
+lod  0
+mul
+wrt
+lit  0
+lod  1
+sub
+lod  4
+sub
+lit  2
+div
+lod  0
+mul
+wrt
+nop

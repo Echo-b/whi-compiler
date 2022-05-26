@@ -78,32 +78,17 @@ struct backpatchlist *parse_while_stmt(){
   hold_token = get_token(); // skip while keyword
 
   int instr_start = nextinst();   // @ini
-
   parse_expression();
-
   struct backpatchlist *la = brf(); // @brf
-
   hold_token = tokens[p_token];
 
   if (TK_DO == hold_token.type) {
-    Print("token 'do' parsing via");
     hold_token = get_token(); // skip do keyword
     struct backpatchlist *lst = parse_stmt_list();
 
     generate_instr_jmp(instr_start);   // @br
 
     backpatch(lst, instr_start);  // @patch
-
-    hold_token = tokens[p_token];
-
-    if (TK_OD == hold_token.type) {
-      Print("token 'od' parsing via");
-      hold_token = get_token(); // skip od keyword
-    } else {
-      handle_error(ERROR_x05,hold_token.row,hold_token.col); // lack od
-    }
-  } else {
-    handle_error(ERROR_x06,hold_token.row,hold_token.col); // lack do
   }
   return la;
 }
