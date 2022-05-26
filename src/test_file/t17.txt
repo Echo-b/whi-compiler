@@ -7,5 +7,4 @@ tmp := tmp * (tmp - a) * ( tmp - b) * (tmp - c);
 while ~((s * s) = tmp) do
   s := s + 1
 od;
-write(s);
-write(1)
+write(s)
