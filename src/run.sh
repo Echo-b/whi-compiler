@@ -13,5 +13,5 @@ for i in $(find ./test_file  -name \*.whi); do
   num=${i:0-6:2}
   outname="$outpath$pre${num}$post"
   touch $outname
-	./lexicial "$i" $outname
+	./wcc "$i" $outname
 done

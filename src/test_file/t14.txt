@@ -1,0 +1,11 @@
+var guess,tag;
+tag := 55;
+read(guess);
+while ~(tag = guess) do
+  if (tag = guess) then
+    write(1)
+  else
+    write(0);
+    read(guess)
+  fi
+od
