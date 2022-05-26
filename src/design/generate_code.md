@@ -110,7 +110,32 @@ struct backpatchlist *parse_while_stmt(){
 ```
 这一部分也是很简单的，很明显根据我们之前的分析在对应位置插入相应的语义动作即可。
 
-### 测试生成
+### 代码生成
+这一步我们需要做的工作相对简单，即读取指令数组的指令，然后根据不同的指令拼接上对应的操作数，然后将其输入到对应的制定文件中，举例如下:
+
+```c
+bool out_ssam_code(FILE* fd){
+  char instr[8] = {'\0'};
+  for(int i = 0; i < instr_cnt; ++i){
+    switch (inst_array[i].op)
+    {
+    case _add:
+      sprintf(instr, "add\n");
+      break;
+    // more
+    case _lit:
+      sprintf(instr, "lit  %d\n" ,inst_array[i].a);
+      break;
+    }
+    // more
+    fprintf(fd, "%s", instr);
+  }
+  printf(GREEN"[success] generate simple stack machine code successful!\n"NONE);
+  return true;
+}
+```
+
+### 测试
 
 #### 测试文件代码
 以求解鸡兔同笼问题的代码为例:
@@ -239,4 +264,5 @@ foot = 32
 
 ```
 实际运行效果与预期一致
-![](../../asserts/code_valide.png)
+
+![valid](../../asserts/code_valide.png)
