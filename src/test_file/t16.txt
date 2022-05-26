@@ -2,7 +2,7 @@ var num,singledigit, tendigit, hundredsdigit;
 hundredsdigit := 0;
 tendigit := 0;
 singledigit := 0;
-num := 978;
+read(num);
 if ~( num < 99) then
   hundredsdigit := num / 100;
   tendigit := num / 10 - hundredsdigit * 10;
