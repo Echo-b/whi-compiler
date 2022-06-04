@@ -2,8 +2,8 @@
 #include "scanner.c"
 
 int main(int argc, char* argv[]) {              
-  if (argc < 3) {
-    printf("lexicial [src] [dst]!\n");
+  if (argc < 2) {
+    printf("wcc [src] [dst]\n");
     exit(-1);
   }
   FILE* fp;
@@ -11,15 +11,17 @@ int main(int argc, char* argv[]) {
   char str[128];
   /* opening file for reading */
   fp = fopen(argv[1], "r");
-  out = fopen(argv[2], "a");
-  if (fp == NULL) {
+  if (argc == 2) 
+    out = fopen("a.out", "a");
+  else
+    out = fopen(argv[2], "a");
+  if (!fp || !out) {
     perror("Error opening file");
     return (-1);
   }
   bool successful = false;
   init_regex();
   while (fgets(str, 128, fp) != NULL) {
-    // printf("%s",str);
     init_token(str, &successful);
   }
   tokens[nr_token++].type = TK_EOF;
