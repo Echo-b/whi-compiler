@@ -1,3 +1,8 @@
+# WHI语言编译器设计概要
+
+[TOC]
+
+## 词法分析设计
 ### 正则表达式介绍
 [正则表达式](https://zh.wikipedia.org/wiki/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F)（英语：`Regular Expression`，常简写为`regex`、`regexp`或`RE`），又称正则表示式、正则表示法、规则表达式、常规表示法，是计算机科学的一个概念。正则表达式使用单个字符串来描述、匹配一系列匹配某个句法规则的字符串。在很多文本编辑器里，正则表达式通常被用来检索、替换那些匹配某个模式的文本。
 
@@ -491,7 +496,7 @@ void parse_vardeclation(){
 
 此处的错误类型定义可能并未完全使用到，诸如`ERROR_x02`，是语义层面的错误，语法层面无法暂时未对此情况作出处理。最终的效果如下图所示：
 
-![parse_result](../../asserts/parse_result.png)
+<img src="../../asserts/parse_result.png" alt="parse_result" style="zoom: 67%;" />
 
 ## 代码生成
 
@@ -526,11 +531,11 @@ struct backpatchlist *merge(struct backpatchlist *bpl1, struct backpatchlist *bp
 
 ### 控制语句跳转时机
 
-![code_design](../../asserts/backpatch_design.png)
+<img src="../../asserts/backpatch_design.png" alt="code_design" style="zoom: 67%;" />
 
 对于控制语句我们需要在合适的位置插入必要的语义动作，具体来说如下
 
-![](../../asserts/if_design.png)
+<img src="../../asserts/if_design.png" style="zoom: 50%;" />
 
 首先我们需要对表达式生成代码，从代码执行的角度来看，最后表达式的运算结果会被放到栈顶，假设为`a`，那么我们就需要比较该值是否为`0`来判断是不是需要跳转到`else`分支后的语句执行，那么就需要在这里插入一个`brf`的语义动作，他会用下一条语句的标号生成一个回填链表`la`以及一条有条件跳转指令`jpc`，之所以用下一条语句的标号刚好对应我们之后生成的`jpc`指令。
 
@@ -538,7 +543,7 @@ struct backpatchlist *merge(struct backpatchlist *bpl1, struct backpatchlist *bp
 
 当执行到`else`的时候，此时我们就知道表达式不成立的时候需要跳转的位置，因此对`la`回填，回填标号是下一条语句。继续执行会执行到`L2`，显然`L2`也可以是一个`if`或`while`语句，因此当内部的循环执行完毕的时候也会需要跳出整个循环，故我们需要保存`L2`内部的回填链表，最后识别到`fi`的时候我们将内部需要跳出循环的所有回填链表进行合并，传递给调用者用于执行后续操作。
 
-![](../../asserts/while_design.png)
+<img src="../../asserts/while_design.png" style="zoom: 50%;" />
 
 对于`while`语句的话，我们唯一可以跳出循环的条件就是表达式不成立的情况，如果表达式成立我们需要重复执行内部语句内容。因此我们需要保存进入`while`时的指令标号用于后续跳转。之后`brf`语义动作和`if`语句相同，不做赘述。继续往下执行就到了`L`部分，同样的道理`L`也可以是一个`if`或`while`语句，因此当内部的循环执行完毕的时候也会需要跳出整个循环，故我们需要保存`L`内部的回填链表，且此时`while`语句执行完毕，我们也知道了跳出的位置标号，故回填，而在此之前需要先生成一条无条件跳转指令`jmp`，跳转目标为我们在进入`while`时保存的标号。
 
@@ -555,7 +560,7 @@ void generate_instr_sto(Token_t t) {
 ```
 在这里我们只需要将指令数组的对应位置进行赋值即可。并且对于一个变量我们需要检索全局符号表以找到其对应的位置。
 
-## 插入语义动作
+###  插入语义动作
 在这里我们需要做的就是需要将相应的代码生成函数插入到语法分析的代码中，然后将其输入到制定的代码输出文件。我们对`while`和`if`做过具体的介绍，因此我们以`while`为例，看看其具体的插入时机及位置。
 
 ```c
