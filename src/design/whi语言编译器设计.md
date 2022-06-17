@@ -768,6 +768,7 @@ cd ./abstract_machine
 ./run.sh
 ```
 如果出现类似以下结果，说明测试通过
+
 ![code_test](../../asserts/code_test.png)
 
 也可以通过以下方式指定输入输出文件来生成`.out`文件
