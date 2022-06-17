@@ -67,7 +67,7 @@
 
 ![regex](../../asserts/regex.png)
 
-从状态图来看，首先我们会进入第一个匹配模块，该模块可以匹配数字，字母和下划线一次或者多次，其实这里写代码的话就会对应着一个`while`循环。紧接着是`@`的匹配，然后类似第一个的循环。最后是两个循环的匹配，每个循环都匹配一个`.xxx`的串。这也是符合邮箱的格式的。通过这个图形我们可以很直观的看到一个具体的识别过程，另外其实也可以说明我们的每一个正则表达式都可以转化为一个状态图。那么我们的`token`识别本质上就是一个`token`对应一个状态机，而一个状态机对应一个正则表达式。所以用正则表达式来匹配`token`是可行的，而且其的优势在于它在直观上看减少了代码量，因为其不用显示的书写各种循环代码。虽然其本质工作可能依然没有改变，但是对上层人员编写可读性更高的代码提供了可能。
+从状态图来看，首先会进入第一个匹配模块，该模块可以匹配数字，字母和下划线一次或者多次，对应编写代码就会对应着一个`while`循环。紧接着是`@`的匹配，之后类似第一个循环。最后是两个循环的匹配，每个循环都匹配一个`.xxx`的串。这也是符合邮箱的格式的。通过该图形我们可以直观的看到一个具体的识别过程，另外也可以说明我们的每一个正则表达式都可以转化为一个状态图。于是很自然的想法是：我们的`token`识别本质上就是一个`token`对应一个状态机，而一个状态机对应一个正则表达式。所以用正则表达式来匹配`token`是可行的，而且其的优势在于在直观上减少了代码量，因为其不用显示的书写各种循环代码。虽然其本质工作可能依然没有改变，但是对上层人员编写可读性更高的代码提供了可能。
 
 ### C语言对应的正则表达式函数结构概览
 `C`语言也对正则表达式的识别进行了封装，使用时，我们需要引入头文件`<regex.h>`，一般用以下三个步骤进行使用:
@@ -79,7 +79,7 @@
 下面是具体的介绍:
 
 #### `regcomp()`函数
-```c
+```C
 int regcomp(regex_t *preg, const char *regex, int cflags);
 ```
 - `regex_t` 是一个结构体数据类型，用来存放编译后的正则表达式。
@@ -92,7 +92,7 @@ int regcomp(regex_t *preg, const char *regex, int cflags);
 
 
 #### `regmatch_t `结构
-```c
+```C
 typedef struct {
   regoff_t rm_so;
   regoff_t rm_eo;
@@ -102,14 +102,14 @@ typedef struct {
  `rm_so` 存放匹配文本串在目标串中的开始位置，`rm_eo` 存放结束位置。有了这一结构，我们就可以将识别到的关键字，标识符和整数存储到指定位置。
 
 #### `regerror()`函数
-```c
+```C
 size_t regerror(int errcode, const regex_t *preg, char *errbuf,
             size_t errbuf_size);
 ```
 当执行 `regcomp` 或者`regexec` 产生错误，就可以调用这个函数而返回一个包含错误信息的字符串。`errbuf`在这里作为传出参数，我们需要声明一块用于存储错误信息的地址，然后传入，如果出错，可从该地址查看具体的错误信息。
 
 #### `regexec()`函数
-```c
+```C
 int regexec(const regex_t *preg, const char *string, size_t nmatch,
             regmatch_t pmatch[], int eflags);
 ```
@@ -125,7 +125,7 @@ int regexec(const regex_t *preg, const char *string, size_t nmatch,
     `REG_NOTEOL`:指定之后，就不会匹配结束的`$`字符，              
 
 #### `regfree()`函数
-```c
+```C
 void regfree(regex_t *preg);
 ```
 清空`preg`指向的`regex_t`结构体的内容。
@@ -135,7 +135,7 @@ void regfree(regex_t *preg);
 在词法分析这一部分，我们主要采用正则表达式来识别我们`WHI`语言中的具体词素，而关于正则表达式的具体设计，我们在上面对其进行了简要的介绍，并引入了`Ｃ`语言中与之对应的库函数。我的大致思路是，对每一个要识别的`token`都编写一个与之对应的正则表达式，然后用相应的库函数将其构造为`C`语言中标准的正则表达式结构。之后读入我们的程序源文件，识别出每一个`token`，对于标识符，关键字，整数则将其存储到制定的位置。
 
 具体的规则编写在上述文章已经介绍过，再次不做赘述，每个正则表达式的对应规则如下
-```c
+```C
 struct rule {
   const char* regex;
   int token_type;
@@ -164,7 +164,7 @@ struct rule {
 
 #### 正则表达式初始化构造
 其实有了上面的铺垫后，这一部分就显得比较简单了，具体就是调用`regcomp`将我们上面指定的字符串规则构造为可以识别的正则表达式。具体如下:
-```c
+```C
 void init_regex() {
   int i;
   char error_msg[128];
@@ -196,7 +196,7 @@ void init_regex() {
 5. 加入静态全局变量`add_gsyt_flag`，初始值为`0`，识别到`var`将其设置为`1`，识别到`;`将其设置为`0`。另在调用`addglob()`函数时，判断`add_gsyt_flag`，为`1`则调用加入，为`0`不执行。
 
 具体的部分代码如下
-```c
+```C
 switch (rules[i].token_type) {
 case TK_NOTYPE:
   break;
@@ -228,7 +228,7 @@ default:;
 
 #### 测试
 测试文件
-```clike
+```C
 var x0, y0, x, y, g, m, temp;
 x0 := x;
 y0 := y;
@@ -237,7 +237,7 @@ write(x);
 ```
 
 识别结果
-```
+```C
 token type=> [271] 	 token value => [var] 	 position =>(1,0)
 token type=> [258] 	 token value => [x0] 	 position =>(1,4)
 token type=> [270] 	 token value => [] 	 position =>(1,6)
@@ -288,7 +288,7 @@ the var name is [temp],the position is [6]
 ### 设计概要
 #### 关于错误处理部分的设计
 对于错误处理，我们主要将所有的错误类型定义在一个结构体中
-```c
+```C
 struct grammer_error{
   int errorkind;
   const char* str;
@@ -353,7 +353,7 @@ struct grammer_error{
 |变量未声明，假设`b`未声明|`a := b`|
 
 #### 代码示例
-```c
+```C
 /**
  * @brief 
  * parse write statement and generate write instr
@@ -427,7 +427,7 @@ void parse_write_stmt(){
 
 在具体解析的时候，我们需要根据文法的每一个非终结符。编写对应的解析函数。以变量声明为例
 
-```c
+```C
 /**
  * @brief 
  * X ::= var V {',' V}
@@ -503,7 +503,7 @@ void parse_vardeclation(){
 ### 回填链表的设计
 由于我们需要在一遍扫描中生成指令代码，但是遇到分支循环语句时，由于执行时间的限制，我们暂时看不到后续跳转的位置，因此我们就需要一种数据结构将需要跳转的位置保存下来，当我们执行到合适的位置的时候对其进行回填。而具体的数据结构设计如下：
 
-```c
+```C
 struct backpatchlist
 {
   int inst_remain;
@@ -550,7 +550,7 @@ struct backpatchlist *merge(struct backpatchlist *bpl1, struct backpatchlist *bp
 ### 构造每一条指令的生成动作
 以`lod`为例
 
-```c
+```C
 void generate_instr_sto(Token_t t) {
   int ret = serchslot(t.str);
   inst_array[instr_cnt].op = _sto;
@@ -563,7 +563,7 @@ void generate_instr_sto(Token_t t) {
 ###  插入语义动作
 在这里我们需要做的就是需要将相应的代码生成函数插入到语法分析的代码中，然后将其输入到制定的代码输出文件。我们对`while`和`if`做过具体的介绍，因此我们以`while`为例，看看其具体的插入时机及位置。
 
-```c
+```C
 /**
  * @brief 
  * parse while statement
@@ -598,7 +598,7 @@ struct backpatchlist *parse_while_stmt(){
 ### 代码生成
 这一步我们需要做的工作相对简单，即读取指令数组的指令，根据不同的指令类型拼接上对应的操作数，将其输入到对应的指定文件中，举例如下:
 
-```c
+```C
 bool out_ssam_code(FILE* fd){
   char instr[8] = {'\0'};
   for(int i = 0; i < instr_cnt; ++i){
@@ -625,7 +625,7 @@ bool out_ssam_code(FILE* fd){
 #### 测试文件代码
 以求解鸡兔同笼问题的代码为例:
 
-```c
+```C
 //source code
 var head, foot, cock, rabbit, n;
 n := 0;
@@ -649,7 +649,7 @@ if n = 0 then write(0) else skip fi
 ```
 
 生成`ssam`代码如下
-```
+```C
 int  5
 lit  0
 sto  0
@@ -715,7 +715,7 @@ nop
 
 #### 验证
 我们用四组测试数据验证
-```
+```C
 data 1:
 head = 8
 foot = 24
@@ -751,3 +751,35 @@ foot = 32
 实际运行效果与预期一致
 
 ![valid](../../asserts/code_valide.png)
+
+## 代码生成与运行
+### 生成测试集
+```
+cd ~/Work
+git clone git@github.com:Echo-b/minimalist-compiler.git
+cd src
+./run.sh 
+```
+它会读取`test_file`文件夹下的测试文件`*.whi`，然后依次执行编译的过程，生成简单栈式抽象机代码`*.out`。
+
+### 检验测试集
+```
+cd ./abstract_machine
+./run.sh
+```
+如果出现类似以下结果，说明测试通过
+![code_test](../../asserts/code_test.png)
+
+也可以通过以下方式指定输入输出文件来生成`.out`文件
+```
+cd whi-compiler/src
+make clean
+make
+./wcc [inputfilename] [outputfilename]
+```
+
+然后使用以下命令运行
+```
+../abstract_machine/machine [outputfilename]
+```
+
